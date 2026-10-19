@@ -1,0 +1,29 @@
+# MarketTracker — Python 3.11+ dependencies
+
+# --- Telegram Bot Framework ---
+aiogram>=3.7,<4.0
+
+# --- Database (async) ---
+# [asyncio] extra pulls in greenlet, required by SQLAlchemy async engine
+SQLAlchemy[asyncio]>=2.0.30,<3.0
+aiosqlite>=0.20,<1.0
+
+# --- Scheduler ---
+APScheduler>=3.10.4,<4.0
+
+# --- HTTP client + parsing ---
+httpx>=0.27,<1.0
+curl_cffi>=0.7,<1.0
+beautifulsoup4>=4.12,<5.0
+lxml>=5.2,<6.0
+
+# --- Price history charts ---
+matplotlib>=3.8,<4.0
+
+# --- Config / validation ---
+pydantic>=2.7,<3.0
+pydantic-settings>=2.3,<3.0
+
+# --- Logging / env ---
+loguru>=0.7,<1.0
+python-dotenv>=1.0,<2.0
