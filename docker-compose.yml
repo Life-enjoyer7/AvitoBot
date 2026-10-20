@@ -1,10 +1,29 @@
+# Docker Compose для Timeweb Cloud App Platform.
+#
+# App Platform сам выдаёт бесплатный технический домен с HTTPS и проксирует
+# трафик с 80/443 на порт первого сервиса (здесь 8000). Секреты задаются
+# в панели Timeweb (App Platform → Переменные): BOT_TOKEN, DATABASE_URL,
+# WEBAPP_URL. Плейсхолдеры ${...} подставляются из этих переменных.
+#
+# ВНИМАНИЕ (требования App Platform): нельзя использовать `volumes`,
+# хост-порты 80/443 и env_file. Поэтому данные хранятся в управляемой
+# PostgreSQL (см. DEPLOY_TIMEWEB.md), а не на диске контейнера.
+
+version: "3.9"
+
 services:
   bot:
-    build: .
-    container_name: market_tracker_bot
+    build:
+      context: .
+    container_name: markettracker
     restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    environment:
+      - WEBAPP_HOST=0.0.0.0
+      - WEBAPP_PORT=8000
+      - PORT=8000
+      - WEBAPP_DEV_MODE=false
+      - BOT_TOKEN=${BOT_TOKEN}
+      - DATABASE_URL=${DATABASE_URL}
+      - WEBAPP_URL=${WEBAPP_URL}
