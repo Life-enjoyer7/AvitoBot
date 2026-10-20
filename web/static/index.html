@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>MarketTracker</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: var(--tg-theme-bg-color, #f2f5f4);
+      --card: var(--tg-theme-secondary-bg-color, #ffffff);
+      --text: var(--tg-theme-text-color, #1c2b24);
+      --hint: var(--tg-theme-hint-color, #7d8a84);
+      --accent: #2fbf71;
+      --accent-dark: #23a05d;
+      --red: #e5484d;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); padding: 16px 14px 40px;
+    }
+    h1 { font-size: 20px; margin-bottom: 4px; }
+    .subtitle { color: var(--hint); font-size: 13px; margin-bottom: 16px; }
+
+    .stats { display: flex; gap: 10px; margin-bottom: 16px; }
+    .stat {
+      flex: 1; background: var(--card); border-radius: var(--radius);
+      padding: 12px 14px; box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    }
+    .stat .label { color: var(--hint); font-size: 12px; }
+    .stat .value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+
+    .add-box { display: flex; gap: 8px; margin-bottom: 18px; }
+    .add-box input {
+      flex: 1; border: 1px solid #d7dedb; border-radius: 12px;
+      padding: 12px; font-size: 14px; background: var(--card); color: var(--text);
+    }
+    .btn {
+      border: none; border-radius: 12px; padding: 12px 16px; font-size: 14px;
+      font-weight: 600; cursor: pointer; background: var(--accent); color: #fff;
+    }
+    .btn:active { background: var(--accent-dark); }
+    .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    .btn.danger { background: #fff; color: var(--red); border: 1px solid #f0c4c5; }
+
+    .track {
+      background: var(--card); border-radius: var(--radius); padding: 12px;
+      margin-bottom: 10px; display: flex; gap: 12px; align-items: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,.05); cursor: pointer;
+    }
+    .track img {
+      width: 64px; height: 64px; border-radius: 12px; object-fit: cover;
+      background: #e9efec; flex-shrink: 0;
+    }
+    .track .info { flex: 1; min-width: 0; }
+    .track .name { font-weight: 600; font-size: 14px; line-height: 1.25; }
+    .track .meta { color: var(--hint); font-size: 12px; margin-top: 2px; }
+    .track .price { font-weight: 700; font-size: 15px; margin-top: 4px; }
+    .track .pill {
+      display: inline-block; background: #e6f7ee; color: var(--accent-dark);
+      border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: 600; margin-top: 4px;
+    }
+    .track .change.down { color: var(--red); }
+    .track .change.up { color: var(--accent-dark); }
+    .track .chevron { color: var(--hint); font-size: 20px; }
+
+    .empty { text-align: center; color: var(--hint); padding: 40px 0; }
+
+    .detail { position: fixed; inset: 0; background: var(--bg); padding: 16px 14px 30px; overflow-y: auto; display: none; }
+    .detail.open { display: block; }
+    .detail .top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .detail h2 { font-size: 17px; flex: 1; }
+    .detail img.big { width: 100%; border-radius: var(--radius); margin-bottom: 12px; background: #e9efec; }
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 12px; color: var(--hint); margin-bottom: 4px; }
+    .field input { width: 100%; border: 1px solid #d7dedb; border-radius: 12px; padding: 12px; font-size: 14px; background: var(--card); color: var(--text); }
+    canvas { margin: 6px 0 16px; }
+    .actions { display: flex; gap: 8px; }
+    .actions .btn { flex: 1; }
+  </style>
+</head>
+<body>
+  <h1>🛒 MarketTracker</h1>
+  <div class="subtitle">Слежу за ценами на маркетплейсах</div>
+
+  <div class="stats">
+    <div class="stat"><div class="label">На отслеживании</div><div class="value" id="statCount">—</div></div>
+    <div class="stat"><div class="label">Последняя проверка</div><div class="value" id="statCheck">—</div></div>
+  </div>
+
+  <div class="add-box">
+    <input id="urlInput" type="text" placeholder="Ссылка на товар (Avito, Яндекс Маркет…)" />
+    <button class="btn" id="addBtn">Добавить</button>
+  </div>
+
+  <div id="tracks"></div>
+
+  <div class="detail" id="detail">
+    <div class="top">
+      <button class="btn ghost" id="backBtn">←</button>
+      <h2 id="detailTitle">Товар</h2>
+    </div>
+    <img class="big" id="detailImg" alt="" />
+    <canvas id="chart" height="120"></canvas>
+    <div class="field"><label>🎯 Целевая цена (₽, 0 — отключить)</label><input id="fTarget" type="number" inputmode="decimal" /></div>
+    <div class="field"><label>📉 Порог падения (% , 0 — отключить)</label><input id="fDrop" type="number" inputmode="decimal" /></div>
+    <div class="field"><label>📈 Порог роста (% , 0 — отключить)</label><input id="fRise" type="number" inputmode="decimal" /></div>
+    <div class="actions">
+      <button class="btn" id="saveBtn">Сохранить</button>
+      <button class="btn danger" id="stopBtn">Остановить</button>
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram && window.Telegram.WebApp;
+    if (tg) tg.ready();
+
+    function authHeaders() {
+      const h = { "Content-Type": "application/json" };
+      if (tg && tg.initData) {
+        h["X-Telegram-Init-Data"] = tg.initData;
+      } else {
+        let uid = localStorage.getItem("mt_dev_uid");
+        if (!uid) { uid = (prompt("Dev: введите ваш telegram id") || "0"); localStorage.setItem("mt_dev_uid", uid); }
+        h["X-User-Id"] = uid;
+      }
+      return h;
+    }
+
+    async function api(path, opts = {}) {
+      const res = await fetch(path, { ...opts, headers: { ...authHeaders(), ...(opts.headers || {}) } });
+      if (!res.ok) {
+        let msg = "Ошибка";
+        try { msg = (await res.json()).detail || msg; } catch (e) {}
+        throw new Error(msg);
+      }
+      return res.json();
+    }
+
+    function fmtPrice(v) {
+      return v == null ? "—" : Math.round(v).toLocaleString("ru-RU") + " ₽";
+    }
+    function fmtPct(v) { return v == null ? "выкл" : v + "%"; }
+    function fmtTime(iso) {
+      if (!iso) return "—";
+      const d = new Date(iso);
+      return d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    let selectedTrack = null;
+    let chart = null;
+
+    async function loadMe() {
+      const me = await api("/api/me");
+      document.getElementById("statCount").textContent = me.track_count;
+      document.getElementById("statCheck").textContent = fmtTime(me.last_check);
+    }
+
+    async function loadTracks() {
+      const list = await api("/api/tracks");
+      const box = document.getElementById("tracks");
+      if (!list.length) {
+        box.innerHTML = '<div class="empty">Пока нет товаров.<br/>Вставьте ссылку выше.</div>';
+        return;
+      }
+      box.innerHTML = "";
+      list.forEach(t => box.appendChild(renderTrack(t)));
+    }
+
+    function renderTrack(t) {
+      const el = document.createElement("div");
+      el.className = "track";
+      el.innerHTML = `
+        ${t.image_url ? `<img src="${t.image_url}" alt="">` : `<img alt="">`}
+        <div class="info">
+          <div class="name">${escapeHtml(t.title)}</div>
+          <div class="meta">${t.marketplace} · ${t.is_active ? "активен" : "остановлен"}</div>
+          <div class="price">${fmtPrice(t.current_price)}</div>
+          ${t.target_price ? `<span class="pill">🎯 ждём ${fmtPrice(t.target_price)}</span>` : ""}
+          ${t.change_7d != null ? `<div class="change ${t.change_7d < 0 ? "down" : "up"}">${t.change_7d > 0 ? "📈" : "📉"} ${t.change_7d}% за 7 дней</div>` : ""}
+        </div>
+        <div class="chevron">›</div>
+      `;
+      el.onclick = () => openDetail(t);
+      return el;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    async function openDetail(t) {
+      selectedTrack = t;
+      document.getElementById("detail").classList.add("open");
+      document.getElementById("detailTitle").textContent = t.title;
+      const img = document.getElementById("detailImg");
+      if (t.image_url) { img.src = t.image_url; img.style.display = "block"; } else { img.style.display = "none"; }
+      document.getElementById("fTarget").value = t.target_price ?? "";
+      document.getElementById("fDrop").value = t.alert_drop_percent ?? "";
+      document.getElementById("fRise").value = t.alert_rise_percent ?? "";
+      await renderChart(t.id);
+    }
+
+    async function renderChart(id) {
+      const hist = await api(`/api/tracks/${id}/history`);
+      const labels = hist.map(h => fmtTime(h.timestamp));
+      const data = hist.map(h => h.price);
+      if (chart) chart.destroy();
+      const ctx = document.getElementById("chart").getContext("2d");
+      chart = new Chart(ctx, {
+        type: "line",
+        data: { labels, datasets: [{ data, borderColor: "#2fbf71", backgroundColor: "rgba(47,191,113,.12)", fill: true, tension: .35, pointRadius: 3 }] },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { ticks: { callback: v => Math.round(v).toLocaleString("ru-RU") } } },
+        },
+      });
+    }
+
+    document.getElementById("backBtn").onclick = () => {
+      document.getElementById("detail").classList.remove("open");
+    };
+
+    document.getElementById("addBtn").onclick = async () => {
+      const input = document.getElementById("urlInput");
+      const url = input.value.trim();
+      if (!url) return;
+      const btn = document.getElementById("addBtn");
+      btn.disabled = true; btn.textContent = "…";
+      try {
+        await api("/api/tracks", { method: "POST", body: JSON.stringify({ url }) });
+        input.value = "";
+        await Promise.all([loadMe(), loadTracks()]);
+      } catch (e) {
+        alert(e.message);
+      } finally {
+        btn.disabled = false; btn.textContent = "Добавить";
+      }
+    };
+
+    document.getElementById("saveBtn").onclick = async () => {
+      if (!selectedTrack) return;
+      const body = {
+        target_price: document.getElementById("fTarget").value || null,
+        alert_drop_percent: document.getElementById("fDrop").value || null,
+        alert_rise_percent: document.getElementById("fRise").value || null,
+      };
+      try {
+        await api(`/api/tracks/${selectedTrack.id}`, { method: "PATCH", body: JSON.stringify(body) });
+        document.getElementById("detail").classList.remove("open");
+        await loadTracks();
+      } catch (e) { alert(e.message); }
+    };
+
+    document.getElementById("stopBtn").onclick = async () => {
+      if (!selectedTrack) return;
+      try {
+        await api(`/api/tracks/${selectedTrack.id}/stop`, { method: "POST" });
+        document.getElementById("detail").classList.remove("open");
+        await Promise.all([loadMe(), loadTracks()]);
+      } catch (e) { alert(e.message); }
+    };
+
+    loadMe().catch(e => alert(e.message));
+    loadTracks().catch(e => alert(e.message));
+  </script>
+</body>
+</html>

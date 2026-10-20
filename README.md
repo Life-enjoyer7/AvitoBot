@@ -18,6 +18,8 @@
 - Защита от спама уведомлений: не чаще одного алерта по одному условию
   в течение `ALERT_COOLDOWN_HOURS` (по умолчанию 24 часа).
 - График истории цены (последние 14 замеров) в PNG по команде `/history`.
+- Полноценное веб-приложение (Telegram Mini App): список товаров с фото,
+  графики, добавление и настройка треков.
 - Graceful fallback на детерминированные mock-данные, если маркетплейс
   блокирует запрос (403/Cloudflare/таймаут) — бот не падает.
 
@@ -29,6 +31,7 @@
 - APScheduler 3.x (AsyncIOScheduler)
 - httpx + curl_cffi + BeautifulSoup4 + lxml
 - matplotlib (PNG-графики)
+- FastAPI + uvicorn (Telegram Mini App)
 - pydantic + pydantic-settings
 - loguru (ротация логов)
 - python-dotenv
@@ -61,6 +64,10 @@
 │   └── repositories/        # user_repo, track_repo, history_repo, alert_repo
 ├── scheduler/
 │   └── jobs.py              # фоновая задача проверки цен
+├── web/
+│   ├── api.py               # FastAPI-бэкенд Mini App
+│   ├── auth.py              # валидация Telegram initData
+│   └── static/index.html    # фронтенд Mini App
 ├── utils/
 │   ├── logger.py            # loguru
 │   ├── url_validator.py     # валидация и классификация ссылок
@@ -105,6 +112,31 @@ docker compose up --build -d
 
 Логи и SQLite-база хранятся в смонтированных томах `./logs` и `./data`.
 
+## Telegram Mini App (веб-приложение)
+
+Бот включает веб-фронтенд (`web/static/index.html`) и FastAPI-бэкенд
+(`web/api.py`), запускаемые тем же процессом на `http://127.0.0.1:8000`.
+
+Telegram Mini Apps требуют **HTTPS**. Для локального запуска:
+
+1. Поднимите публичный HTTPS-туннель к порту 8000, например cloudflared:
+   ```bash
+   cloudflared tunnel --url http://127.0.0.1:8000
+   ```
+   (или `ngrok http 8000`).
+2. Полученный `https://...` укажите в `.env`:
+   ```
+   WEBAPP_URL=https://your-tunnel.trycloudflare.com
+   ```
+3. В BotFather у бота задайте **Menu Button** → Web App URL (тот же `WEBAPP_URL`).
+   Бот установит кнопку меню автоматически при старте, если `WEBAPP_URL` задан.
+4. Для отладки в обычном браузере (без Telegram):
+   ```
+   WEBAPP_DEV_MODE=true
+   WEBAPP_DEV_USER_ID=ВАШ_TELEGRAM_ID
+   ```
+   и откройте `http://127.0.0.1:8000`.
+
 ## Переменные окружения
 
 | Переменная | По умолчанию | Описание |
@@ -119,6 +151,11 @@ docker compose up --build -d
 | `LOG_ROTATION` | `10 MB` | Размер ротации логов |
 | `LOG_RETENTION` | `7 days` | Срок хранения логов |
 | `ALERT_COOLDOWN_HOURS` | `24` | Мин. интервал между алертами по одному условию |
+| `WEBAPP_URL` | — | Публичный HTTPS-адрес Mini App (для кнопки меню) |
+| `WEBAPP_HOST` | `127.0.0.1` | Хост веб-приложения |
+| `WEBAPP_PORT` | `8000` | Порт веб-приложения |
+| `WEBAPP_DEV_MODE` | `false` | Dev-режим: вход без initData (по `X-User-Id`) |
+| `WEBAPP_DEV_USER_ID` | `0` | ID пользователя в dev-режиме |
 
 ## Команды бота
 

@@ -77,6 +77,22 @@ class Settings(BaseSettings):
         ),
     )
 
+    # --- Web app (Telegram Mini App) ---
+    webapp_host: str = Field(default="127.0.0.1", description="Mini App bind host")
+    webapp_port: int = Field(default=8000, description="Mini App port")
+    webapp_url: str | None = Field(
+        default=None,
+        description="Public HTTPS URL of the Mini App (for the bot menu button)",
+    )
+    webapp_dev_mode: bool = Field(
+        default=False,
+        description="Allow X-User-Id auth without Telegram initData (dev only)",
+    )
+    webapp_dev_user_id: int = Field(
+        default=0,
+        description="Fallback user id used by the frontend in dev mode",
+    )
+
     # --- Logging ---
     log_level: str = Field(default="INFO", description="Minimum console log level")
     log_dir: Path = Field(

@@ -22,6 +22,10 @@ lxml>=5.2,<6.0
 # --- Price history charts ---
 matplotlib>=3.8,<4.0
 
+# --- Telegram Mini App (web frontend) ---
+fastapi>=0.115,<1.0
+uvicorn>=0.30,<1.0
+
 # --- Config / validation ---
 pydantic>=2.7,<3.0
 pydantic-settings>=2.3,<3.0

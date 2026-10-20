@@ -1,17 +1,19 @@
 """MarketTracker — entry point.
 
 Wires together: logging, database, Telegram bot + dispatcher, routers,
-middlewares, and the APScheduler background price-check job.
+middlewares, the APScheduler price-check job, and the FastAPI Mini App.
 """
 
 from __future__ import annotations
 
 import asyncio
 
+import uvicorn
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.types import MenuButtonWebApp, WebAppInfo
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from loguru import logger
 
@@ -24,6 +26,7 @@ from db.database import dispose_db, init_db
 from parser.http import close_cffi_session, close_http_client
 from scheduler.jobs import check_prices
 from utils.logger import setup_logger
+from web.api import app as web_app
 
 
 async def main() -> None:
@@ -45,8 +48,19 @@ async def main() -> None:
         session=create_bot_session(),
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
-    dp = Dispatcher(storage=MemoryStorage())
 
+    if settings.webapp_url:
+        try:
+            await bot.set_chat_menu_button(
+                menu_button=MenuButtonWebApp(
+                    text="Открыть приложение",
+                    web_app=WebAppInfo(url=settings.webapp_url),
+                )
+            )
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Не удалось установить кнопку меню: {}", exc)
+
+    dp = Dispatcher(storage=MemoryStorage())
     dp.message.middleware(ThrottlingMiddleware())
     register_error_handlers(dp)
 
@@ -70,10 +84,23 @@ async def main() -> None:
     scheduler.start()
     logger.info("Scheduler started (every {} min).", settings.scheduler_interval_minutes)
 
+    web_server = uvicorn.Server(
+        uvicorn.Config(
+            web_app,
+            host=settings.webapp_host,
+            port=settings.webapp_port,
+            log_level="warning",
+        )
+    )
+    web_task = asyncio.create_task(web_server.serve())
+    logger.info("Mini App served at http://{}:{}", settings.webapp_host, settings.webapp_port)
+
     try:
         await dp.start_polling(bot)
     finally:
         scheduler.shutdown(wait=False)
+        web_server.should_exit = True
+        await web_task
         await close_cffi_session()
         await close_http_client()
         await dispose_db()
