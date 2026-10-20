@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -29,3 +31,18 @@ async def get_history(
     )
     result = await session.execute(stmt)
     return list(reversed(result.scalars().all()))
+
+
+async def get_first_price_since(
+    session: AsyncSession, track_id: int, days: int = 7
+) -> float | None:
+    """Return the oldest price recorded within the last `days` days."""
+    since = datetime.now() - timedelta(days=days)
+    stmt = (
+        select(PriceHistory.price)
+        .where(PriceHistory.track_id == track_id, PriceHistory.timestamp >= since)
+        .order_by(PriceHistory.timestamp.asc(), PriceHistory.id.asc())
+        .limit(1)
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()

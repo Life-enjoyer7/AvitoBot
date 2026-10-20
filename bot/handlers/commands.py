@@ -1,4 +1,8 @@
-"""Commands: /list, /stop, /history, /settings."""
+"""Commands: /list, /stop, /history, /settings.
+
+The list/settings logic is shared with the reply-keyboard buttons in
+`bot/handlers/menu.py`.
+"""
 
 from __future__ import annotations
 
@@ -25,15 +29,18 @@ async def _get_user_id(session, message: Message) -> int:
     return user.id
 
 
-@router.message(Command("list"))
-async def cmd_list(message: Message) -> None:
+async def show_list(message: Message) -> None:
+    """Shared logic for /list and the «Мои товары» button."""
     async with async_session_factory() as session:
         user_id = await _get_user_id(session, message)
         tracks = await track_repo.list_tracks(session, user_id)
         await session.commit()
 
     if not tracks:
-        await message.answer("У вас пока нет треков. Отправьте ссылку на товар или /track.")
+        await message.answer(
+            "У вас пока нет треков. Отправьте ссылку на товар или нажмите "
+            "«➕ Добавить товар»."
+        )
         return
 
     lines = []
@@ -49,6 +56,34 @@ async def cmd_list(message: Message) -> None:
         "📋 <b>Ваши треки:</b>\n\n" + "\n\n".join(lines),
         reply_markup=tracks_list_kb(tracks),
     )
+
+
+async def show_settings(message: Message) -> None:
+    """Shared logic for /settings and the «Настройки» button."""
+    async with async_session_factory() as session:
+        user_id = await _get_user_id(session, message)
+        tracks = await track_repo.list_tracks(session, user_id)
+        await session.commit()
+
+    if not tracks:
+        await message.answer("Нет сохранённых настроек. Отправьте ссылку на товар.")
+        return
+
+    lines = []
+    for t in tracks:
+        lines.append(
+            f"<b>#{t.id}</b> {t.title}\n"
+            f"🎯 целевая: {format_price(t.target_price)}\n"
+            f"📉 падение: {format_percent(t.alert_drop_percent)}\n"
+            f"📈 рост: {format_percent(t.alert_rise_percent)}\n"
+            f"состояние: {'активен' if t.is_active else 'остановлен'}"
+        )
+    await message.answer("⚙️ <b>Настройки треков:</b>\n\n" + "\n\n".join(lines))
+
+
+@router.message(Command("list"))
+async def cmd_list(message: Message) -> None:
+    await show_list(message)
 
 
 @router.message(Command("stop"))
@@ -101,22 +136,4 @@ async def cmd_history(message: Message, command: CommandObject) -> None:
 
 @router.message(Command("settings"))
 async def cmd_settings(message: Message) -> None:
-    async with async_session_factory() as session:
-        user_id = await _get_user_id(session, message)
-        tracks = await track_repo.list_tracks(session, user_id)
-        await session.commit()
-
-    if not tracks:
-        await message.answer("Нет сохранённых настроек. Отправьте ссылку на товар.")
-        return
-
-    lines = []
-    for t in tracks:
-        lines.append(
-            f"<b>#{t.id}</b> {t.title}\n"
-            f"🎯 целевая: {format_price(t.target_price)}\n"
-            f"📉 падение: {format_percent(t.alert_drop_percent)}\n"
-            f"📈 рост: {format_percent(t.alert_rise_percent)}\n"
-            f"состояние: {'активен' if t.is_active else 'остановлен'}"
-        )
-    await message.answer("⚙️ <b>Настройки треков:</b>\n\n" + "\n\n".join(lines))
+    await show_settings(message)

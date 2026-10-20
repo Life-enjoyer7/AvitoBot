@@ -9,6 +9,7 @@ from aiogram.types import Message
 
 from bot.handlers.states import TrackSetup
 from bot.keyboards.inline import alert_settings_kb
+from bot.keyboards.reply import main_menu_kb
 from parser.parser_factory import ParserFactory
 from utils.formatting import format_price
 from utils.url_validator import (
@@ -18,6 +19,11 @@ from utils.url_validator import (
 )
 
 router = Router(name="track")
+
+TRACK_PROMPT = (
+    "Отправьте ссылку на товар с поддерживаемого маркетплейса.\n\n"
+    "Поддерживаются: Авито, Яндекс Маркет, Ozon, Wildberries, Auto.ru"
+)
 
 _NUMBER_RE = r"^\d+([.,]\d+)?$"
 
@@ -34,10 +40,7 @@ def _parse_float(text: str | None) -> float | None:
 @router.message(Command("track"))
 async def cmd_track(message: Message, state: FSMContext) -> None:
     await state.clear()
-    await message.answer(
-        "Отправьте ссылку на товар с поддерживаемого маркетплейса.\n\n"
-        "Поддерживаются: Авито, Яндекс Маркет, Ozon, Wildberries, Auto.ru"
-    )
+    await message.answer(TRACK_PROMPT, reply_markup=main_menu_kb())
 
 
 @router.message(Command("cancel"))

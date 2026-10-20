@@ -15,7 +15,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from loguru import logger
 
-from bot.handlers import callbacks, commands, start, track
+from bot.handlers import callbacks, commands, menu, start, track
 from bot.middlewares.errors import register_error_handlers
 from bot.middlewares.throttling import ThrottlingMiddleware
 from config.settings import settings
@@ -49,6 +49,7 @@ async def main() -> None:
     register_error_handlers(dp)
 
     dp.include_router(start.router)
+    dp.include_router(menu.router)
     dp.include_router(track.router)
     dp.include_router(commands.router)
     dp.include_router(callbacks.router)
