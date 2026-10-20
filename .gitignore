@@ -31,3 +31,6 @@ logs/
 *.swp
 .DS_Store
 Thumbs.db
+
+# --- Local tooling ---
+cloudflared
