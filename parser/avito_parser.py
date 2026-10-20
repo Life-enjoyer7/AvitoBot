@@ -124,15 +124,25 @@ class AvitoParser(BaseParser):
                         return title, self._extract_price(mobile), self._extract_image(mobile)
                 return None, None, None
 
-            # 403 — IP blocked; 429 — rate limit; 439 — Avito anti-bot ("too
-            # many / suspicious requests"). All are worth a backoff-and-retry.
-            if response.status_code in (403, 429, 439):
+            # 429 — transient rate limit: worth backoff-and-retry.
+            if response.status_code == 429:
                 logger.warning(
-                    "Avito blocked/limited ({}) attempt {}/3, waiting {}s",
-                    response.status_code, attempt + 1, _RATE_LIMIT_BACKOFF,
+                    "Avito rate-limited (429) attempt {}/3, waiting {}s",
+                    attempt + 1, _RATE_LIMIT_BACKOFF,
                 )
                 await asyncio.sleep(_RATE_LIMIT_BACKOFF)
                 continue
+
+            # 403 / 439 — persistent IP/anti-bot block: one quick retry, then
+            # give up so the "add product" flow does not hang for a minute.
+            if response.status_code in (403, 439):
+                if attempt == 0:
+                    logger.warning(
+                        "Avito blocked ({}) — one quick retry in 8s", response.status_code
+                    )
+                    await asyncio.sleep(8)
+                    continue
+                return None, None, None
 
             return None, None, None
 
