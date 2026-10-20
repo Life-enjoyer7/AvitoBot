@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from urllib.parse import urlparse
+import re
+from urllib.parse import urlparse, urlunparse
 
 from db.enums import Marketplace
 
@@ -15,6 +16,9 @@ _DOMAIN_MAP: dict[str, Marketplace] = {
     "wb.ru": Marketplace.WB,
     "auto.ru": Marketplace.AUTO,
 }
+
+# Yandex category/catalog pages (…/list) — not a single product card.
+_YANDEX_CATALOG_RE = re.compile(r"/list(?:[/?#]|$)")
 
 SUPPORTED_TEXT = (
     "Авито, Яндекс Маркет, Ozon, Wildberries, Auto.ru"
@@ -35,6 +39,14 @@ def normalize_url(raw: str) -> str:
     parsed = urlparse(text)
     if parsed.scheme not in ("http", "https") or not parsed.netloc:
         raise ValueError("Некорректная ссылка.")
+
+    # Для Яндекс.Маркета отбрасываем трекинговые query-параметры (sponsored,
+    # cpc, do-waremd5 и т.п.) — карточка работает и без них, а хвост только
+    # мешает и может привести на рекламный вариант страницы.
+    host = (parsed.hostname or "").lower()
+    if host.endswith("market.yandex.ru") and parsed.query:
+        text = urlunparse((parsed.scheme, parsed.netloc, parsed.path, "", "", ""))
+
     return text
 
 
@@ -49,3 +61,12 @@ def classify_marketplace(url: str) -> Marketplace:
     raise UnsupportedMarketplaceError(
         f"Не поддерживаемый маркетплейс. Поддерживаются: {SUPPORTED_TEXT}."
     )
+
+
+def ensure_product_url(url: str, marketplace: Marketplace) -> None:
+    """Raise ValueError if `url` is a catalog/list page, not a product card."""
+    if marketplace == Marketplace.YANDEX and _YANDEX_CATALOG_RE.search(url):
+        raise ValueError(
+            "Это ссылка на каталог, а не на карточку товара. "
+            "Откройте конкретный товар и скопируйте ссылку на него."
+        )

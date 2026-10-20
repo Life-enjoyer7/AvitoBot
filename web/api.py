@@ -21,6 +21,7 @@ from parser.parser_factory import ParserFactory
 from utils.url_validator import (
     UnsupportedMarketplaceError,
     classify_marketplace,
+    ensure_product_url,
     normalize_url,
 )
 from web.auth import telegram_id_from_init_data
@@ -145,6 +146,7 @@ async def add_track(body: dict, tg_id: int = Depends(current_telegram_id)) -> di
     try:
         url = normalize_url(raw)
         marketplace = classify_marketplace(url)
+        ensure_product_url(url, marketplace)
     except (ValueError, UnsupportedMarketplaceError) as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 

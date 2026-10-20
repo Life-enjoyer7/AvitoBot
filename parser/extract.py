@@ -50,8 +50,8 @@ def _find_first_key(value: Any, key: str) -> Any:
 
 
 def json_ld_image(html: str) -> str | None:
-    """Return the first product image URL from JSON-LD blocks."""
-    for data in _load_json_ld(html):
+    """Return the first product image URL from JSON-LD Product blocks."""
+    for data in _product_blocks(html):
         image = _find_first_key(data, "image")
         if isinstance(image, str) and image.startswith("http"):
             return image
@@ -76,9 +76,26 @@ def _load_json_ld(html: str) -> list[Any]:
     return result
 
 
+def _is_product_block(data: Any) -> bool:
+    """True if a JSON-LD block is a Product (not WebSite/ItemList/...)."""
+    if not isinstance(data, dict):
+        return False
+    type_ = data.get("@type")
+    if isinstance(type_, str):
+        return type_.lower() == "product"
+    if isinstance(type_, list):
+        return any(isinstance(x, str) and x.lower() == "product" for x in type_)
+    return False
+
+
+def _product_blocks(html: str) -> list[Any]:
+    """Only JSON-LD Product blocks (skips catalogs/lists/breadcrumbs)."""
+    return [d for d in _load_json_ld(html) if _is_product_block(d)]
+
+
 def extract_json_ld_product(html: str) -> tuple[str | None, float | None]:
-    """Return (title, price) parsed from JSON-LD Product/Offer data."""
-    for data in _load_json_ld(html):
+    """Return (title, price) parsed from JSON-LD Product blocks."""
+    for data in _product_blocks(html):
         offers = _find_first_key(data, "offers")
         if offers is None:
             continue
