@@ -13,6 +13,7 @@ Data sources, tried in order (never raises):
 from __future__ import annotations
 
 import asyncio
+import random
 import re
 import time
 from urllib.parse import urlparse
@@ -32,12 +33,14 @@ _throttle_lock = asyncio.Lock()
 
 
 async def _throttle() -> None:
-    """Ensure a minimum interval between Avito mobile-API requests."""
+    """Ensure a minimum interval (+ jitter) between Avito mobile-API requests."""
     global _last_request_at
     async with _throttle_lock:
         wait = _MIN_INTERVAL - (time.monotonic() - _last_request_at)
         if wait > 0:
             await asyncio.sleep(wait)
+        # Small random jitter makes the request pattern less bot-like.
+        await asyncio.sleep(random.uniform(0.5, 1.5))
         _last_request_at = time.monotonic()
 
 
@@ -83,7 +86,12 @@ class AvitoParser(BaseParser):
                     price=price,
                     image_url=image,
                 )
+            # Mobile API failed (blocked / rate-limited / removed). The HTML
+            # page is blocked even harder by Avito, so don't fire a second
+            # request that only deepens the rate limit — fall back to mock.
+            return self._mock(url)
 
+        # No numeric item id in the URL — HTML is the only option left.
         return await self._parse_html(url)
 
     async def _fetch_mobile_api(
@@ -116,9 +124,11 @@ class AvitoParser(BaseParser):
                         return title, self._extract_price(mobile), self._extract_image(mobile)
                 return None, None, None
 
-            if response.status_code in (403, 429):
+            # 403 — IP blocked; 429 — rate limit; 439 — Avito anti-bot ("too
+            # many / suspicious requests"). All are worth a backoff-and-retry.
+            if response.status_code in (403, 429, 439):
                 logger.warning(
-                    "Avito rate-limited ({}) attempt {}/3, waiting {}s",
+                    "Avito blocked/limited ({}) attempt {}/3, waiting {}s",
                     response.status_code, attempt + 1, _RATE_LIMIT_BACKOFF,
                 )
                 await asyncio.sleep(_RATE_LIMIT_BACKOFF)
