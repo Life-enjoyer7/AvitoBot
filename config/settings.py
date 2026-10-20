@@ -119,8 +119,11 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _normalize_db_url(self) -> "Settings":
-        """Rewrite postgres://… to postgresql+asyncpg://… for SQLAlchemy async."""
-        raw = self.db_url
+        """Normalize the DB URL: blank → SQLite, postgres:// → asyncpg."""
+        raw = (self.db_url or "").strip()
+        if not raw:
+            self.db_url = "sqlite+aiosqlite:///data/market_tracker.db"
+            return self
         if raw.startswith("postgres://"):
             self.db_url = "postgresql+asyncpg://" + raw[len("postgres://"):]
         elif raw.startswith("postgresql://"):
