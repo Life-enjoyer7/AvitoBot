@@ -42,10 +42,20 @@ async def close_http_client() -> None:
 
 
 def get_cffi_session() -> AsyncSession:
-    """Return a shared curl_cffi session impersonating Chrome (lazy)."""
+    """Return a shared curl_cffi session impersonating Chrome (lazy).
+
+    Honors `PARSER_PROXY_URL` so marketplace requests (Avito/Yandex) can be
+    routed through a residential proxy when the host IP is blocked.
+    """
     global _cffi_session
     if _cffi_session is None:
-        _cffi_session = AsyncSession(impersonate="chrome")
+        proxies = None
+        if settings.parser_proxy_url:
+            proxies = {
+                "http": settings.parser_proxy_url,
+                "https": settings.parser_proxy_url,
+            }
+        _cffi_session = AsyncSession(impersonate="chrome", proxies=proxies)
     return _cffi_session
 
 
