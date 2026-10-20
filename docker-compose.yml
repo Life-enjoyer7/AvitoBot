@@ -9,13 +9,10 @@
 # хост-порты 80/443 и env_file. Поэтому данные хранятся в управляемой
 # PostgreSQL (см. DEPLOY_TIMEWEB.md), а не на диске контейнера.
 
-version: "3.9"
-
 services:
   bot:
     build:
       context: .
-    container_name: markettracker
     restart: unless-stopped
     ports:
       - "8000:8000"

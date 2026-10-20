@@ -1,0 +1,741 @@
+20:36:48 | INFO | Cloning repository
+20:36:50 | INFO | Repository cloned successfully
+20:36:50 | INFO | Sanitizing docker compose
+20:36:50 | INFO | Building docker compose
+20:36:51 | INFO | time="2026-10-20T17:36:51Z" level=warning msg="The \"BOT_TOKEN\" variable is not set. Defaulting to a blank string."
+
+20:36:51 | INFO | time="2026-10-20T17:36:51Z" level=warning msg="The \"WEBAPP_URL\" variable is not set. Defaulting to a blank string."
+
+20:36:51 | INFO | time="2026-10-20T17:36:51Z" level=warning msg="The \"DATABASE_URL\" variable is not set. Defaulting to a blank string."
+
+20:36:51 | INFO | time="2026-10-20T17:36:51Z" level=warning msg="/docker_compose/aea88bdb-dd07-4fe4-a994-a985ccd1690c/d514badb-1eea-4339-81c5-73c44d67f535/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+
+20:36:53 | INFO | time="2026-10-20T17:36:53Z" level=warning msg="The \"BOT_TOKEN\" variable is not set. Defaulting to a blank string."
+
+20:36:53 | INFO | time="2026-10-20T17:36:53Z" level=warning msg="The \"DATABASE_URL\" variable is not set. Defaulting to a blank string."
+
+20:36:53 | INFO | time="2026-10-20T17:36:53Z" level=warning msg="The \"WEBAPP_URL\" variable is not set. Defaulting to a blank string."
+
+20:36:53 | INFO | time="2026-10-20T17:36:53Z" level=warning msg="/docker_compose/aea88bdb-dd07-4fe4-a994-a985ccd1690c/8f1ff11f-d437-4a80-8481-809097ca8016/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+
+20:36:53 | INFO | Configuring logging and hardening for docker-compose services
+20:36:55 | INFO | time="2026-10-20T17:36:55Z" level=warning msg="The \"DATABASE_URL\" variable is not set. Defaulting to a blank string."
+
+20:36:55 | INFO | time="2026-10-20T17:36:55Z" level=warning msg="The \"WEBAPP_URL\" variable is not set. Defaulting to a blank string."
+
+20:36:55 | INFO | time="2026-10-20T17:36:55Z" level=warning msg="/docker_compose/aea88bdb-dd07-4fe4-a994-a985ccd1690c/b84ee419-9d65-4ffd-84ae-d29aa35c30b4/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+
+20:36:55 | INFO | #1 [internal] load local bake definitions
+
+20:36:55 | INFO | #1 reading from stdin 751B done
+
+20:36:55 | INFO | #1 DONE 0.0s
+
+20:36:55 | INFO | 
+
+20:36:55 | INFO | #3 [internal] load metadata for docker.io/library/python:3.11-slim
+
+20:36:55 | INFO | #2 DONE 0.1s
+
+20:36:55 | INFO | #2 transferring dockerfile: 736B done
+
+20:36:55 | INFO | #2 [internal] load build definition from Dockerfile
+
+20:36:55 | INFO | 
+
+20:36:57 | INFO | #3 DONE 2.1s
+
+20:36:57 | INFO | 
+
+20:36:57 | INFO | #4 [1/7] FROM docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9ea65f6ce
+
+20:36:57 | INFO | #4 resolve docker.io/library/python:3.11-slim@sha256:e88e9763f943ec1834f992a4b51e0f24500486803e8bc534e5767af9ea65f6ce 0.0s done
+
+20:36:57 | INFO | #4 sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 14.46MB / 14.46MB 0.7s done
+
+20:36:57 | INFO | #4 sha256:0f752a1982d6f819fc2c9e78ac1514c63f2f2e1dec7885ffd4cb6809ba4a26ca 1.29MB / 1.29MB 0.5s done
+
+20:36:57 | INFO | #4 sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 29.84MB / 29.84MB 0.9s done
+
+20:36:58 | INFO | #4 extracting sha256:ecc510c1e359bdc007b39802570bb7e4dec7d6ebccf357c3201a74299113e05e 1.0s done
+
+20:36:58 | INFO | #4 extracting sha256:0f752a1982d6f819fc2c9e78ac1514c63f2f2e1dec7885ffd4cb6809ba4a26ca 0.1s done
+
+20:36:58 | INFO | #4 sha256:496c1a902b3a93cea3e54b90b79dbcaa0e58ad90c3fe9dd0a43c9557dc47f17d 250B / 250B 8.2s done
+
+20:36:58 | INFO | #4 extracting sha256:759a7f30c31818dda4c97b407b24d93da479c306568d185ced927e1a749164f1 0.6s done
+
+20:36:58 | INFO | 
+
+20:36:58 | INFO | #4 extracting sha256:496c1a902b3a93cea3e54b90b79dbcaa0e58ad90c3fe9dd0a43c9557dc47f17d 0.0s done
+
+20:36:58 | INFO | #5 [2/7] WORKDIR /app
+
+20:36:58 | INFO | #4 DONE 8.5s
+
+20:36:58 | INFO | #5 DONE 0.2s
+
+20:36:58 | INFO | #6 [3/7] RUN apt-get update && apt-get install -y --no-install-recommends         libfreetype6         libpng16-16         libgomp1     && rm -rf /var/lib/apt/lists/*
+
+20:36:58 | INFO | 
+
+20:36:58 | INFO | #6 0.636 Hit:1 http://deb.debian.org/debian trixie InRelease
+
+20:36:58 | INFO | #6 0.665 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+
+20:36:58 | INFO | #6 1.201 Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [4412 B]
+
+20:36:58 | INFO | #6 0.749 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+
+20:36:58 | INFO | #6 1.245 Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [269 kB]
+
+20:36:58 | INFO | #6 1.980 Reading package lists...
+
+20:36:58 | INFO | #6 0.803 Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9678 kB]
+
+20:36:58 | INFO | #6 1.980 Fetched 10.0 MB in 1s (6978 kB/s)
+
+20:36:58 | INFO | #6 5.095 debconf: unable to initialize frontend: Readline
+
+20:36:58 | INFO | #6 4.607 0 upgraded, 4 newly installed, 0 to remove and 1 not upgraded.
+
+20:36:58 | INFO | #6 3.995 Reading state information...
+
+20:36:58 | INFO | #6 4.607 Need to get 1179 kB of archives.
+
+20:36:58 | INFO | #6 5.092 debconf: unable to initialize frontend: Dialog
+
+20:36:58 | INFO | #6 5.095 debconf: falling back to frontend: Readline
+
+20:36:58 | INFO | #6 4.430   libbrotli1
+
+20:36:58 | INFO | #6 4.472 The following NEW packages will be installed:
+
+20:36:58 | INFO | #6 4.475   libbrotli1 libfreetype6 libgomp1 libpng16-16t64
+
+20:36:58 | INFO | #6 4.787 Get:2 http://deb.debian.org/debian-security trixie-security/main amd64 libpng16-16t64 amd64 1.6.48-1+deb13u6 [283 kB]
+
+20:36:58 | INFO | #6 4.847 Get:3 http://deb.debian.org/debian trixie/main amd64 libfreetype6 amd64 2.13.3+dfsg-1+deb13u1 [452 kB]
+
+20:36:58 | INFO | #6 4.607 After this operation, 2708 kB of additional disk space will be used.
+
+20:36:58 | INFO | #6 4.850 Get:4 http://deb.debian.org/debian trixie/main amd64 libgomp1 amd64 14.2.0-19 [137 kB]
+
+20:36:58 | INFO | #6 4.607 Get:1 http://deb.debian.org/debian trixie/main amd64 libbrotli1 amd64 1.1.0-2+b7 [307 kB]
+
+20:36:58 | INFO | #6 3.716 Building dependency tree...
+
+20:36:58 | INFO | #6 2.948 Reading package lists...
+
+20:36:58 | INFO | #6 5.094 debconf: (TERM is not set, so the dialog frontend is not usable.)
+
+20:36:58 | INFO | #6 5.096 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 4.)
+
+20:36:58 | INFO | #6 4.424 The following additional packages will be installed:
+
+20:36:58 | INFO | #6 5.096 debconf: falling back to frontend: Teletype
+
+20:36:58 | INFO | #6 5.101 debconf: unable to initialize frontend: Teletype
+
+20:36:58 | INFO | #6 5.102 debconf: falling back to frontend: Noninteractive
+
+20:36:58 | INFO | #6 5.102 debconf: (This frontend requires a controlling tty.)
+
+20:36:58 | INFO | #6 6.169 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5660 files and directories currently installed.)
+
+20:36:58 | INFO | #6 6.215 Preparing to unpack .../libbrotli1_1.1.0-2+b7_amd64.deb ...
+
+20:36:58 | INFO | #6 6.127 Fetched 1179 kB in 0s (3171 kB/s)
+
+20:36:58 | INFO | #6 6.168 Selecting previously unselected package libbrotli1:amd64.
+
+20:36:58 | INFO | #6 6.224 Unpacking libbrotli1:amd64 (1.1.0-2+b7) ...
+
+20:36:58 | INFO | #6 6.523 Setting up libgomp1:amd64 (14.2.0-19) ...
+
+20:36:58 | INFO | #6 6.446 Selecting previously unselected package libgomp1:amd64.
+
+20:36:58 | INFO | #6 6.374 Selecting previously unselected package libfreetype6:amd64.
+
+20:36:58 | INFO | #6 6.509 Setting up libbrotli1:amd64 (1.1.0-2+b7) ...
+
+20:36:58 | INFO | #6 6.312 Preparing to unpack .../libpng16-16t64_1.6.48-1+deb13u6_amd64.deb ...
+
+20:36:58 | INFO | #6 6.382 Unpacking libfreetype6:amd64 (2.13.3+dfsg-1+deb13u1) ...
+
+20:36:58 | INFO | #6 6.451 Preparing to unpack .../libgomp1_14.2.0-19_amd64.deb ...
+
+20:36:58 | INFO | #6 6.377 Preparing to unpack .../libfreetype6_2.13.3+dfsg-1+deb13u1_amd64.deb ...
+
+20:36:58 | INFO | #6 6.317 Unpacking libpng16-16t64:amd64 (1.6.48-1+deb13u6) ...
+
+20:36:58 | INFO | #6 6.307 Selecting previously unselected package libpng16-16t64:amd64.
+
+20:36:58 | INFO | #6 6.460 Unpacking libgomp1:amd64 (14.2.0-19) ...
+
+20:36:58 | INFO | #6 6.554 Setting up libfreetype6:amd64 (2.13.3+dfsg-1+deb13u1) ...
+
+20:36:58 | INFO | #7 transferring context: 164B done
+
+20:36:58 | INFO | 
+
+20:36:58 | INFO | #6 6.575 Processing triggers for libc-bin (2.41-12+deb13u4) ...
+
+20:36:58 | INFO | #7 [internal] load .dockerignore
+
+20:36:58 | INFO | #7 DONE 0.1s
+
+20:36:58 | INFO | #6 6.539 Setting up libpng16-16t64:amd64 (1.6.48-1+deb13u6) ...
+
+20:36:58 | INFO | #6 DONE 6.7s
+
+20:36:58 | INFO | 
+
+20:36:58 | INFO | #8 [internal] load build context
+
+20:36:58 | INFO | #8 transferring context: 257.01kB 0.2s done
+
+20:36:58 | INFO | 
+
+20:36:58 | INFO | #9 DONE 0.1s
+
+20:36:58 | INFO | #8 DONE 0.4s
+
+20:36:58 | INFO | #9 [4/7] COPY requirements.txt .
+
+20:36:58 | INFO | #10 2.227 Collecting aiogram<4.0,>=3.7 (from -r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 [5/7] RUN pip install --no-cache-dir -r requirements.txt
+
+20:36:58 | INFO | 
+
+20:36:58 | INFO | #10 2.436 Collecting aiohttp-socks<1.0,>=0.8 (from -r requirements.txt (line 6))
+
+20:36:58 | INFO | #10 2.480   Downloading aiohttp_socks-0.12.0-py3-none-any.whl.metadata (3.5 kB)
+
+20:36:58 | INFO | #10 2.364   Downloading aiogram-3.31.0-py3-none-any.whl.metadata (6.8 kB)
+
+20:36:58 | INFO | #10 3.127   Downloading sqlalchemy-2.1.5-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (9.7 kB)
+
+20:36:58 | INFO | #10 3.082 Collecting SQLAlchemy<3.0,>=2.0.30 (from SQLAlchemy[asyncio]<3.0,>=2.0.30->-r requirements.txt (line 10))
+
+20:36:58 | INFO | #10 3.191 Collecting aiosqlite<1.0,>=0.20 (from -r requirements.txt (line 11))
+
+20:36:58 | INFO | #10 3.445 Collecting APScheduler<4.0,>=3.10.4 (from -r requirements.txt (line 16))
+
+20:36:58 | INFO | #10 3.236   Downloading aiosqlite-0.22.1-py3-none-any.whl.metadata (4.3 kB)
+
+20:36:58 | INFO | #10 3.380   Downloading asyncpg-0.32.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.4 kB)
+
+20:36:58 | INFO | #10 3.490   Downloading apscheduler-3.11.3-py3-none-any.whl.metadata (6.5 kB)
+
+20:36:58 | INFO | #10 3.334 Collecting asyncpg<1.0,>=0.29 (from -r requirements.txt (line 13))
+
+20:36:58 | INFO | #10 3.556 Collecting httpx<1.0,>=0.27 (from -r requirements.txt (line 19))
+
+20:36:58 | INFO | #10 3.778   Downloading curl_cffi-0.16.3-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (17 kB)
+
+20:36:58 | INFO | #10 3.601   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+
+20:36:58 | INFO | #10 3.732 Collecting curl_cffi<1.0,>=0.7 (from -r requirements.txt (line 20))
+
+20:36:58 | INFO | #10 3.853 Collecting beautifulsoup4<5.0,>=4.12 (from -r requirements.txt (line 21))
+
+20:36:58 | INFO | #10 4.350 Collecting lxml<6.0,>=5.2 (from -r requirements.txt (line 22))
+
+20:36:58 | INFO | #10 3.898   Downloading beautifulsoup4-4.15.0-py3-none-any.whl.metadata (3.8 kB)
+
+20:36:58 | INFO | #10 4.804      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.3/80.3 kB 1.5 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 4.395   Downloading lxml-5.4.0-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (3.5 kB)
+
+20:36:58 | INFO | #10 4.708 Collecting matplotlib<4.0,>=3.8 (from -r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 4.752   Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+
+20:36:58 | INFO | #10 5.079 Collecting uvicorn<1.0,>=0.30 (from -r requirements.txt (line 29))
+
+20:36:58 | INFO | #10 5.123   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+
+20:36:58 | INFO | #10 4.994   Downloading fastapi-0.156.0-py3-none-any.whl.metadata (26 kB)
+
+20:36:58 | INFO | #10 5.309 Collecting pydantic<3.0,>=2.7 (from -r requirements.txt (line 32))
+
+20:36:58 | INFO | #10 4.949 Collecting fastapi<1.0,>=0.115 (from -r requirements.txt (line 28))
+
+20:36:58 | INFO | #10 5.355   Downloading pydantic-2.14.1-py3-none-any.whl.metadata (133 kB)
+
+20:36:58 | INFO | #10 5.570 Collecting loguru<1.0,>=0.7 (from -r requirements.txt (line 36))
+
+20:36:58 | INFO | #10 5.512   Downloading pydantic_settings-2.16.1-py3-none-any.whl.metadata (4.0 kB)
+
+20:36:58 | INFO | #10 5.395      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.0/133.0 kB 3.8 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 5.616   Downloading loguru-0.7.3-py3-none-any.whl.metadata (22 kB)
+
+20:36:58 | INFO | #10 5.684 Collecting python-dotenv<2.0,>=1.0 (from -r requirements.txt (line 37))
+
+20:36:58 | INFO | #10 5.467 Collecting pydantic-settings<3.0,>=2.3 (from -r requirements.txt (line 33))
+
+20:36:58 | INFO | #10 6.877 Collecting aiohttp<3.15,>=3.9.0 (from aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 5.729   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+
+20:36:58 | INFO | #10 5.984 Collecting aiofiles<26.0,>=23.2.1 (from aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 6.029   Downloading aiofiles-25.1.0-py3-none-any.whl.metadata (6.3 kB)
+
+20:36:58 | INFO | #10 6.923   Downloading aiohttp-3.14.5-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.3 kB)
+
+20:36:58 | INFO | #10 6.992 Collecting certifi>=2023.7.22 (from aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 7.037   Downloading certifi-2026.10.19-py3-none-any.whl.metadata (2.5 kB)
+
+20:36:58 | INFO | #10 7.093 Collecting magic-filter<1.1,>=1.0.12 (from aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 7.159 Collecting pydantic<3.0,>=2.7 (from -r requirements.txt (line 32))
+
+20:36:58 | INFO | #10 7.137   Downloading magic_filter-1.0.12-py3-none-any.whl.metadata (1.5 kB)
+
+20:36:58 | INFO | #10 7.202   Downloading pydantic-2.13.5-py3-none-any.whl.metadata (110 kB)
+
+20:36:58 | INFO | #10 7.210      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 110.2/110.2 kB 55.5 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 7.327   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+
+20:36:58 | INFO | #10 7.580 Collecting tzlocal>=3.0 (from APScheduler<4.0,>=3.10.4->-r requirements.txt (line 16))
+
+20:36:58 | INFO | #10 7.460   Downloading python_socks-3.1.1-py3-none-any.whl.metadata (8.9 kB)
+
+20:36:58 | INFO | #10 7.416 Collecting python-socks<4.0.0,>=2.4.3 (from python-socks[asyncio]<4.0.0,>=2.4.3->aiohttp-socks<1.0,>=0.8->-r requirements.txt (line 6))
+
+20:36:58 | INFO | #10 7.284 Collecting typing-extensions<=5.0,>=4.7.0 (from aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 7.872   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+
+20:36:58 | INFO | #10 7.750   Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+
+20:36:58 | INFO | #10 7.625   Downloading tzlocal-5.4.4-py3-none-any.whl.metadata (7.7 kB)
+
+20:36:58 | INFO | #10 7.823 Collecting httpcore==1.* (from httpx<1.0,>=0.27->-r requirements.txt (line 19))
+
+20:36:58 | INFO | #10 7.705 Collecting anyio (from httpx<1.0,>=0.27->-r requirements.txt (line 19))
+
+20:36:58 | INFO | #10 7.933 Collecting idna (from httpx<1.0,>=0.27->-r requirements.txt (line 19))
+
+20:36:58 | INFO | #10 8.221   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+
+20:36:58 | INFO | #10 8.327   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+
+20:36:58 | INFO | #10 8.505 Collecting cffi>=2.0.0 (from curl_cffi<1.0,>=0.7->-r requirements.txt (line 20))
+
+20:36:58 | INFO | #10 8.284 Collecting h11>=0.16 (from httpcore==1.*->httpx<1.0,>=0.27->-r requirements.txt (line 19))
+
+20:36:58 | INFO | #10 8.822 Collecting contourpy>=1.0.1 (from matplotlib<4.0,>=3.8->-r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 8.645 Collecting soupsieve>=1.6.1 (from beautifulsoup4<5.0,>=4.12->-r requirements.txt (line 21))
+
+20:36:58 | INFO | #10 8.563   Downloading cffi-2.1.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+
+20:36:58 | INFO | #10 8.689   Downloading soupsieve-3.0.3-py3-none-any.whl.metadata (4.4 kB)
+
+20:36:58 | INFO | #10 8.869   Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+
+20:36:58 | INFO | #10 8.969   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+
+20:36:58 | INFO | #10 8.924 Collecting cycler>=0.10 (from matplotlib<4.0,>=3.8->-r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 9.406 Collecting fonttools>=4.28.2 (from matplotlib<4.0,>=3.8->-r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 9.461      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 137.2/137.2 kB 22.8 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 9.451   Downloading fonttools-4.67.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (137 kB)
+
+20:36:58 | INFO | #10 9.632 Collecting kiwisolver>=1.3.1 (from matplotlib<4.0,>=3.8->-r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 10.01   Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+
+20:36:58 | INFO | #10 9.675   Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+
+20:36:58 | INFO | #10 10.01 Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.11/site-packages (from matplotlib<4.0,>=3.8->-r requirements.txt (line 25)) (26.3)
+
+20:36:58 | INFO | #10 9.964 Collecting numpy>=1.25 (from matplotlib<4.0,>=3.8->-r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 10.42 Collecting pillow>=9 (from matplotlib<4.0,>=3.8->-r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 10.54 Collecting pyparsing>=3 (from matplotlib<4.0,>=3.8->-r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 10.46   Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+
+20:36:58 | INFO | #10 10.58   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+
+20:36:58 | INFO | #10 10.64 Collecting python-dateutil>=2.7 (from matplotlib<4.0,>=3.8->-r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 10.84   Downloading starlette-1.9.0-py3-none-any.whl.metadata (6.6 kB)
+
+20:36:58 | INFO | #10 10.92 Collecting typing-inspection>=0.4.2 (from fastapi<1.0,>=0.115->-r requirements.txt (line 28))
+
+20:36:58 | INFO | #10 10.80 Collecting starlette>=0.46.0 (from fastapi<1.0,>=0.115->-r requirements.txt (line 28))
+
+20:36:58 | INFO | #10 10.69   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+
+20:36:58 | INFO | #10 11.14 Collecting opentelemetry-api>=1.44.0 (from fastapi<1.0,>=0.115->-r requirements.txt (line 28))
+
+20:36:58 | INFO | #10 11.07   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+
+20:36:58 | INFO | #10 11.02 Collecting annotated-doc>=0.0.2 (from fastapi<1.0,>=0.115->-r requirements.txt (line 28))
+
+20:36:58 | INFO | #10 10.97   Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+
+20:36:58 | INFO | #10 11.25 Collecting click>=7.0 (from uvicorn<1.0,>=0.30->-r requirements.txt (line 29))
+
+20:36:58 | INFO | #10 11.30   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+
+20:36:58 | INFO | #10 11.18   Downloading opentelemetry_api-1.45.1-py3-none-any.whl.metadata (1.4 kB)
+
+20:36:58 | INFO | #10 11.41   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+
+20:36:58 | INFO | #10 11.36 Collecting annotated-types>=0.6.0 (from pydantic<3.0,>=2.7->-r requirements.txt (line 32))
+
+20:36:58 | INFO | #10 13.39 Collecting aiohappyeyeballs>=2.5.0 (from aiohttp<3.15,>=3.9.0->aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 13.21 Collecting greenlet>=1 (from SQLAlchemy[asyncio]<3.0,>=2.0.30->-r requirements.txt (line 10))
+
+20:36:58 | INFO | #10 13.26   Downloading greenlet-3.5.6-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+
+20:36:58 | INFO | #10 12.79   Downloading pydantic_core-2.46.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+
+20:36:58 | INFO | #10 12.73 Collecting pydantic-core==2.46.5 (from pydantic<3.0,>=2.7->-r requirements.txt (line 32))
+
+20:36:58 | INFO | #10 13.49 Collecting aiosignal>=1.4.0 (from aiohttp<3.15,>=3.9.0->aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 13.43   Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+
+20:36:58 | INFO | #10 13.54   Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+
+20:36:58 | INFO | #10 13.62 Collecting attrs>=17.3.0 (from aiohttp<3.15,>=3.9.0->aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 14.03 Collecting frozenlist>=1.1.1 (from aiohttp<3.15,>=3.9.0->aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 14.08   Downloading frozenlist-1.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+
+20:36:58 | INFO | #10 13.67   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+
+20:36:58 | INFO | #10 16.40 Collecting multidict<8.0,>=4.5 (from aiohttp<3.15,>=3.9.0->aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 18.01   Downloading yarl-1.25.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (111 kB)
+
+20:36:58 | INFO | #10 16.49   Downloading multidict-7.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (6.2 kB)
+
+20:36:58 | INFO | #10 16.92   Downloading propcache-0.5.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (25 kB)
+
+20:36:58 | INFO | #10 16.86 Collecting propcache>=0.2.0 (from aiohttp<3.15,>=3.9.0->aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 17.96 Collecting yarl<2.0,>=1.25.1 (from aiohttp<3.15,>=3.9.0->aiogram<4.0,>=3.7->-r requirements.txt (line 4))
+
+20:36:58 | INFO | #10 18.32 Collecting pycparser (from cffi>=2.0.0->curl_cffi<1.0,>=0.7->-r requirements.txt (line 20))
+
+20:36:58 | INFO | #10 18.02      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 111.6/111.6 kB 281.7 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 19.10 Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib<4.0,>=3.8->-r requirements.txt (line 25))
+
+20:36:58 | INFO | #10 18.36   Downloading pycparser-3.11-py3-none-any.whl.metadata (8.2 kB)
+
+20:36:58 | INFO | #10 19.12   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+
+20:36:58 | INFO | #10 20.02 Downloading aiogram-3.31.0-py3-none-any.whl (859 kB)
+
+20:36:58 | INFO | #10 20.10    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 859.1/859.1 kB 12.7 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 20.39 Downloading asyncpg-0.32.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.3 MB)
+
+20:36:58 | INFO | #10 20.29    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 46.4 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 20.18 Downloading sqlalchemy-2.1.5-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.7 MB)
+
+20:36:58 | INFO | #10 20.14 Downloading aiohttp_socks-0.12.0-py3-none-any.whl (10 kB)
+
+20:36:58 | INFO | #10 20.34 Downloading aiosqlite-0.22.1-py3-none-any.whl (17 kB)
+
+20:36:58 | INFO | #10 20.45    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 53.6 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 20.50 Downloading apscheduler-3.11.3-py3-none-any.whl (66 kB)
+
+20:36:58 | INFO | #10 20.50    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 66.0/66.0 kB 264.4 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 20.55 Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+
+20:36:58 | INFO | #10 20.60 Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+
+20:36:58 | INFO | #10 20.56    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 167.3 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 20.61    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 255.1 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 21.10 Downloading beautifulsoup4-4.15.0-py3-none-any.whl (109 kB)
+
+20:36:58 | INFO | #10 21.10    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.9/109.9 kB 202.2 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 21.04    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.5/13.5 MB 35.3 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 20.66 Downloading curl_cffi-0.16.3-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (13.5 MB)
+
+20:36:58 | INFO | #10 21.14 Downloading lxml-5.4.0-cp311-cp311-manylinux_2_28_x86_64.whl (4.9 MB)
+
+20:36:58 | INFO | #10 21.70 Downloading fastapi-0.156.0-py3-none-any.whl (146 kB)
+
+20:36:58 | INFO | #10 21.28    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 36.9 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 21.66    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 29.8 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 21.70    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 146.7/146.7 kB 269.0 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 21.32 Downloading matplotlib-3.11.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+
+20:36:58 | INFO | #10 21.75    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.4/87.4 kB 327.8 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 21.79 Downloading pydantic-2.13.5-py3-none-any.whl (472 kB)
+
+20:36:58 | INFO | #10 21.75 Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+
+20:36:58 | INFO | #10 21.98 Downloading pydantic_settings-2.16.1-py3-none-any.whl (80 kB)
+
+20:36:58 | INFO | #10 21.98    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.8/80.8 kB 190.7 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 21.93    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 26.1 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 21.85 Downloading pydantic_core-2.46.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+
+20:36:58 | INFO | #10 21.81    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.6/472.6 kB 53.2 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 22.03    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.6/61.6 kB 285.1 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 22.03 Downloading loguru-0.7.3-py3-none-any.whl (61 kB)
+
+20:36:58 | INFO | #10 22.08 Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+
+20:36:58 | INFO | #10 22.17 Downloading aiohttp-3.14.5-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.9 MB)
+
+20:36:58 | INFO | #10 22.29 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+
+20:36:58 | INFO | #10 22.24    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 28.7 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 22.12 Downloading aiofiles-25.1.0-py3-none-any.whl (14 kB)
+
+20:36:58 | INFO | #10 22.38 Downloading certifi-2026.10.19-py3-none-any.whl (136 kB)
+
+20:36:58 | INFO | #10 22.34 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+
+20:36:58 | INFO | #10 22.40    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 136.5/136.5 kB 119.8 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 22.45 Downloading cffi-2.1.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (217 kB)
+
+20:36:58 | INFO | #10 22.50    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 125.3/125.3 kB 288.1 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 22.55    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 355.2/355.2 kB 53.2 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 22.54 Downloading contourpy-1.3.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (355 kB)
+
+20:36:58 | INFO | #10 22.45    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 217.8/217.8 kB 141.7 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 22.49 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+
+20:36:58 | INFO | #10 22.60 Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+
+20:36:58 | INFO | #10 22.64 Downloading fonttools-4.67.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.5 MB)
+
+20:36:58 | INFO | #10 22.91 Downloading greenlet-3.5.6-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (624 kB)
+
+20:36:58 | INFO | #10 22.92    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 624.4/624.4 kB 40.8 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 22.86    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 26.3 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 22.97 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+
+20:36:58 | INFO | #10 23.01 Downloading kiwisolver-1.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+
+20:36:58 | INFO | #10 23.07    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 26.1 MB/s eta 0:00:00
+
+20:36:58 | INFO | #10 23.12 Downloading magic_filter-1.0.12-py3-none-any.whl (11 kB)
+
+20:36:58 | INFO | #10 23.16 Downloading numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+
+20:36:59 | INFO | #10 24.21 Downloading opentelemetry_api-1.45.1-py3-none-any.whl (60 kB)
+
+20:36:59 | INFO | #10 24.21    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.3/60.3 kB 351.5 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 24.17    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 16.7 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 24.26 Downloading pillow-13.0.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+
+20:36:59 | INFO | #10 24.83 Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+
+20:36:59 | INFO | #10 24.78    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 14.0 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 24.86    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.4/126.4 kB 19.0 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 24.88 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+
+20:36:59 | INFO | #10 24.95    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.6/49.6 kB 214.0 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 25.00 Downloading soupsieve-3.0.3-py3-none-any.whl (41 kB)
+
+20:36:59 | INFO | #10 24.90    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 21.0 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 24.95 Downloading python_socks-3.1.1-py3-none-any.whl (49 kB)
+
+20:36:59 | INFO | #10 25.01    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 41.7/41.7 kB 173.5 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 25.06 Downloading starlette-1.9.0-py3-none-any.whl (80 kB)
+
+20:36:59 | INFO | #10 25.07    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.3/80.3 kB 104.5 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 25.12 Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+
+20:36:59 | INFO | #10 25.18    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 44.8 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 25.18 Downloading idna-3.20-py3-none-any.whl (69 kB)
+
+20:36:59 | INFO | #10 25.13    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.1/132.1 kB 113.5 MB/s eta 0:00:00
+
+20:36:59 | INFO | #10 25.24 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+
+20:37:00 | INFO | #10 25.25    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 258.2 MB/s eta 0:00:00
+
+20:37:00 | INFO | #10 25.29 Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+
+20:37:00 | INFO | #10 25.33 Downloading tzlocal-5.4.4-py3-none-any.whl (18 kB)
+
+20:37:00 | INFO | #10 25.38 Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+
+20:37:00 | INFO | #10 25.43 Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+
+20:37:00 | INFO | #10 25.47 Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+
+20:37:00 | INFO | #10 25.48    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 67.5/67.5 kB 130.3 MB/s eta 0:00:00
+
+20:37:00 | INFO | #10 25.59 Downloading multidict-7.1.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (480 kB)
+
+20:37:00 | INFO | #10 25.53 Downloading frozenlist-1.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (231 kB)
+
+20:37:00 | INFO | #10 25.54    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 231.1/231.1 kB 18.1 MB/s eta 0:00:00
+
+20:37:00 | INFO | #10 25.69 Downloading propcache-0.5.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (235 kB)
+
+20:37:00 | INFO | #10 25.64    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 480.4/480.4 kB 11.2 MB/s eta 0:00:00
+
+20:37:00 | INFO | #10 25.71    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 235.4/235.4 kB 21.2 MB/s eta 0:00:00
+
+20:37:00 | INFO | #10 25.76 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+
+20:37:00 | INFO | #10 25.80 Downloading yarl-1.25.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (117 kB)
+
+20:37:00 | INFO | #10 25.87    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.2/51.2 kB 133.4 MB/s eta 0:00:00
+
+20:37:00 | INFO | #10 25.81    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.7/117.7 kB 93.4 MB/s eta 0:00:00
+
+20:37:00 | INFO | #10 25.86 Downloading pycparser-3.11-py3-none-any.whl (51 kB)
+
+20:37:01 | INFO | #10 26.73 Installing collected packages: tzlocal, typing-extensions, soupsieve, six, python-socks, python-dotenv, pyparsing, pycparser, propcache, pillow, numpy, multidict, magic-filter, lxml, loguru, kiwisolver, idna, h11, greenlet, frozenlist, fonttools, cycler, click, certifi, attrs, asyncpg, annotated-types, annotated-doc, aiosqlite, aiohappyeyeballs, aiofiles, yarl, uvicorn, typing-inspection, SQLAlchemy, python-dateutil, pydantic-core, opentelemetry-api, httpcore, contourpy, cffi, beautifulsoup4, APScheduler, anyio, aiosignal, starlette, pydantic, matplotlib, httpx, curl_cffi, aiohttp, pydantic-settings, fastapi, aiohttp-socks, aiogram
+
+20:37:14 | INFO | #10 39.47 Successfully installed APScheduler-3.11.3 SQLAlchemy-2.1.5 aiofiles-25.1.0 aiogram-3.31.0 aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiohttp-socks-0.12.0 aiosignal-1.4.0 aiosqlite-0.22.1 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 asyncpg-0.32.0 attrs-26.1.0 beautifulsoup4-4.15.0 certifi-2026.10.19 cffi-2.1.1 click-8.5.0 contourpy-1.3.3 curl_cffi-0.16.3 cycler-0.12.1 fastapi-0.156.0 fonttools-4.67.0 frozenlist-1.8.0 greenlet-3.5.6 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.20 kiwisolver-1.5.1 loguru-0.7.3 lxml-5.4.0 magic-filter-1.0.12 matplotlib-3.11.2 multidict-7.1.0 numpy-2.4.6 opentelemetry-api-1.45.1 pillow-13.0.0 propcache-0.5.4 pycparser-3.11 pydantic-2.13.5 pydantic-core-2.46.5 pydantic-settings-2.16.1 pyparsing-3.3.3 python-dateutil-2.9.0.post0 python-dotenv-1.2.4 python-socks-3.1.1 six-1.17.0 soupsieve-3.0.3 starlette-1.9.0 typing-extensions-4.16.0 typing-inspection-0.4.4 tzlocal-5.4.4 uvicorn-0.54.0 yarl-1.25.1
+
+20:37:14 | INFO | #10 39.48 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+
+20:37:16 | INFO | #10 DONE 42.1s
+
+20:37:16 | INFO | 
+
+20:37:16 | INFO | #11 CACHED
+
+20:37:16 | INFO | 
+
+20:37:16 | INFO | #13 [6/7] COPY . .
+
+20:37:16 | INFO | 
+
+20:37:16 | INFO | #12 CACHED
+
+20:37:16 | INFO | #12 [5/7] RUN pip install --no-cache-dir -r requirements.txt
+
+20:37:16 | INFO | #11 [4/7] COPY requirements.txt .
+
+20:37:17 | INFO | #13 DONE 0.3s
+
+20:37:17 | INFO | 
+
+20:37:17 | INFO | #14 [7/7] RUN mkdir -p /app/data /app/logs
+
+20:37:17 | INFO | #14 DONE 0.9s
+
+20:37:18 | INFO | 
+
+20:37:18 | INFO | #15 exporting to image
+
+20:37:18 | INFO | #15 exporting layers
+
+20:37:32 | INFO | #15 exporting layers 14.8s done
+
+20:37:32 | INFO | #15 exporting manifest sha256:cfac313651959946b5e5b5a22cf7c8ac421201686350b9efedeca2dcc83a70ef
+
+20:37:32 | INFO | #15 exporting config sha256:8a9d71809c1945e4e2e342e6f85967b7cebc22ff1846260995e755f0b2893457 0.0s done
+
+20:37:32 | INFO | #15 exporting attestation manifest sha256:5e7e6c739507dc5df54167ab5cfd3431b5efd19d03b6d12a04f6c366023d67ac
+
+20:37:32 | INFO | #15 exporting manifest sha256:cfac313651959946b5e5b5a22cf7c8ac421201686350b9efedeca2dcc83a70ef 0.0s done
+
+20:37:33 | INFO | #15 exporting attestation manifest sha256:5e7e6c739507dc5df54167ab5cfd3431b5efd19d03b6d12a04f6c366023d67ac 0.1s done
+
+20:37:33 | INFO | #15 exporting manifest list sha256:1cdc86b8b73853278ada265fdaa14a95f363bf6ec3e8e7c4c50a2d98c807e173 0.0s done
+
+20:37:33 | INFO | #15 naming to docker.io/library/aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4-bot:latest
+
+20:37:33 | INFO | #15 naming to docker.io/library/aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4-bot:latest 0.0s done
+
+20:37:33 | INFO | #15 unpacking to docker.io/library/aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4-bot:latest
+
+20:37:43 | INFO | #15 unpacking to docker.io/library/aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4-bot:latest 10.2s done
+
+20:37:43 | INFO | #15 DONE 25.4s
+
+20:37:43 | INFO | 
+
+20:37:43 | INFO | #16 resolving provenance for metadata file
+
+20:37:43 | INFO | #16 DONE 0.0s
+
+20:37:43 | INFO |  aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4-bot  Built
+
+20:37:44 | INFO |  Network aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4_default  Creating
+
+20:37:44 | INFO |  Network aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4_default  Created
+
+20:37:44 | INFO |  Container markettracker  Creating
+
+20:37:44 | INFO |  Container markettracker  Error response from daemon: Conflict. The container name "/markettracker" is already in use by container "c3148139368d9e91fc01c2daa9fb7bc99bebb7e3d85cf0eb2e841e9d9598300a". You have to remove (or rename) that container to be able to reuse that name.
+
+20:37:44 | INFO | Error response from daemon: Conflict. The container name "/markettracker" is already in use by container "c3148139368d9e91fc01c2daa9fb7bc99bebb7e3d85cf0eb2e841e9d9598300a". You have to remove (or rename) that container to be able to reuse that name.
+
+20:37:46 | INFO | time="2026-10-20T17:37:46Z" level=warning msg="The \"WEBAPP_URL\" variable is not set. Defaulting to a blank string."
+
+20:37:46 | INFO | time="2026-10-20T17:37:46Z" level=warning msg="The \"DATABASE_URL\" variable is not set. Defaulting to a blank string."
+
+20:37:47 | INFO | time="2026-10-20T17:37:47Z" level=warning msg="/docker_compose/aea88bdb-dd07-4fe4-a994-a985ccd1690c/8f1ff11f-d437-4a80-8481-809097ca8016/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+
+20:37:47 | INFO |  Container markettracker  Running
+
+20:37:48 | INFO | Cleaning up old docker compose containers
+20:37:49 | INFO | time="2026-10-20T17:37:49Z" level=warning msg="The \"BOT_TOKEN\" variable is not set. Defaulting to a blank string."
+
+20:37:49 | INFO | time="2026-10-20T17:37:49Z" level=warning msg="The \"DATABASE_URL\" variable is not set. Defaulting to a blank string."
+
+20:37:49 | INFO | time="2026-10-20T17:37:49Z" level=warning msg="The \"WEBAPP_URL\" variable is not set. Defaulting to a blank string."
+
+20:37:49 | INFO | time="2026-10-20T17:37:49Z" level=warning msg="/docker_compose/aea88bdb-dd07-4fe4-a994-a985ccd1690c/b84ee419-9d65-4ffd-84ae-d29aa35c30b4/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+
+20:37:49 | INFO |  Image aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4-bot:latest  Removing
+
+20:37:49 | INFO |  Network aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4_default  Removing
+
+20:37:49 | INFO |  Image aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4-bot:latest  Removed
+
+20:37:49 | INFO |  Network aea88bdb-dd07-4fe4-a994-a985ccd1690c-b84ee419-9d65-4ffd-84ae-d29aa35c30b4_default  Removed
