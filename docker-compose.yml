@@ -3,9 +3,11 @@
 # App Platform сам выдаёт бесплатный технический домен с HTTPS и проксирует
 # трафик с 80/443 на порт первого сервиса (здесь 8000).
 #
-# Обязательная переменная в панели Timeweb — только BOT_TOKEN.
-# DATABASE_URL и WEBAPP_URL опциональны: если не заданы, используется
-# SQLite (внутри контейнера) и, соответственно, кнопка меню не ставится.
+# ВАЖНО: в контейнер попадают только переменные, перечисленные ниже в
+# `environment` (Timeweb подставляет их из панели через ${...}). Если переменной
+# нет в этом списке — она не дойдёт до приложения, даже если задана в панели.
+#
+# Обязательна только BOT_TOKEN. Остальные опциональны (дефолты в ${VAR:-...}).
 
 services:
   bot:
@@ -18,7 +20,16 @@ services:
       - WEBAPP_HOST=0.0.0.0
       - WEBAPP_PORT=8000
       - PORT=8000
-      - WEBAPP_DEV_MODE=false
+      - WEBAPP_DEV_MODE=${WEBAPP_DEV_MODE:-false}
       - BOT_TOKEN=${BOT_TOKEN}
       - DATABASE_URL=${DATABASE_URL:-sqlite+aiosqlite:///data/market_tracker.db}
       - WEBAPP_URL=${WEBAPP_URL:-}
+      # Прокси для парсеров (Avito/Яндекс). Именно он был забыт раньше:
+      - PARSER_PROXY_URL=${PARSER_PROXY_URL:-}
+      # Прокси для Telegram Bot API (если api.telegram.org блокируется):
+      - TELEGRAM_PROXY_URL=${TELEGRAM_PROXY_URL:-}
+      # Прочие настройки (менять не обязательно):
+      - KEEP_ALIVE=${KEEP_ALIVE:-false}
+      - REQUEST_TIMEOUT_SECONDS=${REQUEST_TIMEOUT_SECONDS:-15}
+      - ALERT_COOLDOWN_HOURS=${ALERT_COOLDOWN_HOURS:-24}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}

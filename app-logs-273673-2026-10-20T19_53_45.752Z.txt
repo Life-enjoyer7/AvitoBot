@@ -1,0 +1,249 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+    from bot.handlers import start
+  File "/app/bot/main.py", line 22, in <module>
+  File "/app/db/database.py", line 22, in <module>
+  File "/app/bot/handlers/start.py", line 19, in <module>
+    from db.database import async_session_factory
+    engine = create_async_engine(settings.db_url, echo=False)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/ext/asyncio/engine.py", line 126, in create_async_engine
+    sync_engine = _create_engine(url, **kw)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<sqlalchemy generated warned() wrapper for sqlalchemy.engine.create.create_engine>", line 2, in create_engine
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/util/deprecations.py", line 281, in warned
+    return fn(*args, **kwargs)  # type: ignore[no-any-return]
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/create.py", line 549, in create_engine
+           ^^^^^^^^^^^^^^^^^^^
+    u = _url.make_url(url)
+        ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/url.py", line 856, in make_url
+    return _parse_url(name_or_url)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/sqlalchemy/engine/url.py", line 920, in _parse_url
+sqlalchemy.exc.ArgumentError: Could not parse SQLAlchemy URL from given URL string
+    raise exc.ArgumentError(
+[32m2026-10-20 17:48:37[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m46[0m - [1mDatabase initialized.[0m
+[32m2026-10-20 17:48:37[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m113[0m - [1mScheduler started (tick every 5 min).[0m
+[32m2026-10-20 17:48:37[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m125[0m - [1mMini App served at http://0.0.0.0:8000[0m
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.295342 seconds and try again... (tryings = 1, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.637287 seconds and try again... (tryings = 2, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 2.048653 seconds and try again... (tryings = 3, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 2.591936 seconds and try again... (tryings = 4, bot id = 8816537901)
+Sleep for 3.517442 seconds and try again... (tryings = 5, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.462567 seconds and try again... (tryings = 6, bot id = 8816537901)
+Sleep for 5.031809 seconds and try again... (tryings = 7, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.997094 seconds and try again... (tryings = 8, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.960725 seconds and try again... (tryings = 9, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.098636 seconds and try again... (tryings = 10, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.041260 seconds and try again... (tryings = 11, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.997167 seconds and try again... (tryings = 12, bot id = 8816537901)
+Sleep for 4.824296 seconds and try again... (tryings = 13, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.094597 seconds and try again... (tryings = 14, bot id = 8816537901)
+Sleep for 4.979075 seconds and try again... (tryings = 15, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.992223 seconds and try again... (tryings = 16, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Received SIGTERM signal
+Received SIGTERM signal
+[32m2026-10-20 17:51:04[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m137[0m - [1mMarketTracker stopped.[0m
+[32m2026-10-20 17:51:17[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m46[0m - [1mDatabase initialized.[0m
+[32m2026-10-20 17:51:17[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m113[0m - [1mScheduler started (tick every 5 min).[0m
+[32m2026-10-20 17:51:17[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m125[0m - [1mMini App served at http://0.0.0.0:8000[0m
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.397381 seconds and try again... (tryings = 1, bot id = 8816537901)
+Sleep for 1.804549 seconds and try again... (tryings = 2, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 2.345198 seconds and try again... (tryings = 3, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 3.149063 seconds and try again... (tryings = 4, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 3.921491 seconds and try again... (tryings = 5, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.054802 seconds and try again... (tryings = 6, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.004292 seconds and try again... (tryings = 7, bot id = 8816537901)
+Sleep for 5.061573 seconds and try again... (tryings = 8, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.088120 seconds and try again... (tryings = 9, bot id = 8816537901)
+Sleep for 4.802947 seconds and try again... (tryings = 10, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.946258 seconds and try again... (tryings = 11, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.052281 seconds and try again... (tryings = 12, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.778714 seconds and try again... (tryings = 13, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.996340 seconds and try again... (tryings = 14, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.845909 seconds and try again... (tryings = 15, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.918932 seconds and try again... (tryings = 16, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.041519 seconds and try again... (tryings = 17, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.980495 seconds and try again... (tryings = 18, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.004255 seconds and try again... (tryings = 19, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.967180 seconds and try again... (tryings = 20, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.966582 seconds and try again... (tryings = 21, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.966518 seconds and try again... (tryings = 22, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.944020 seconds and try again... (tryings = 23, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.166822 seconds and try again... (tryings = 24, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.089675 seconds and try again... (tryings = 25, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.081790 seconds and try again... (tryings = 26, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.875053 seconds and try again... (tryings = 27, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.056180 seconds and try again... (tryings = 28, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.180014 seconds and try again... (tryings = 29, bot id = 8816537901)
+[32m2026-10-20 17:56:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 0 active, 0 due[0m
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.098302 seconds and try again... (tryings = 30, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.000688 seconds and try again... (tryings = 31, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.045654 seconds and try again... (tryings = 32, bot id = 8816537901)
+Sleep for 4.967580 seconds and try again... (tryings = 33, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.848584 seconds and try again... (tryings = 34, bot id = 8816537901)
+Sleep for 4.876417 seconds and try again... (tryings = 35, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.982153 seconds and try again... (tryings = 36, bot id = 8816537901)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.123899 seconds and try again... (tryings = 37, bot id = 8816537901)
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 17:59:06[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/tovary_dlya_kompyutera/nvidia_tesla_p100_16gb_sxm2_8009177634?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/tovary_dlya_kompyutera/nvidia_tesla_p100_16gb_sxm2_8009177634?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA'
+[32m2026-10-20 18:00:03[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:00:09[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:00:48[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/tovary_dlya_kompyutera/pod_zakaz_nvidia_tesla_v100_32gb_pcie_dlya_ii_8257303406?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSSpl7mnG5uWlISG5iVnK8c0VSUWWeo5J1LSAAAP__-FFvEkYAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/tovary_dlya_kompyutera/pod_zakaz_nvidia_tesla_v100_32gb_pcie_dlya_ii_8257303406?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSSpl7mnG5uWlISG5iVnK8c0VSUWWeo5J1LSAAAP__-FFvEkYAAAA'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:01:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 0 due[0m
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:03:58[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/tovary_dlya_kompyutera/pod_zakaz_nvidia_tesla_v100_32gb_pcie_dlya_ii_8257303406?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSSpl7mnG5uWlISG5iVnK8c0VSUWWeo5J1LSAAAP__-FFvEkYAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/tovary_dlya_kompyutera/pod_zakaz_nvidia_tesla_v100_32gb_pcie_dlya_ii_8257303406?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSSpl7mnG5uWlISG5iVnK8c0VSUWWeo5J1LSAAAP__-FFvEkYAAAA'
+[32m2026-10-20 18:04:52[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/tovary_dlya_kompyutera/nvidia_quadro_5000_8355519198?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSSpl7mnG5uWlISG5iVnK8c0VSUWWeo5J1LSAAAP__-FFvEkYAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/tovary_dlya_kompyutera/nvidia_quadro_5000_8355519198?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSSpl7mnG5uWlISG5iVnK8c0VSUWWeo5J1LSAAAP__-FFvEkYAAAA'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:06:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 0 due[0m
+[32m2026-10-20 18:11:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 0 due[0m
+[32m2026-10-20 18:16:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 3 due[0m
+[32m2026-10-20 18:16:20[0m | [1mINFO    [0m | [36mparser.avito_parser[0m:[36mparse_listing[0m:[36m79[0m - [1mAvito card 8438104690 fetched via mobile API[0m
+[32m2026-10-20 18:21:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 2 due[0m
+[32m2026-10-20 18:21:18[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/tovary_dlya_kompyutera/nvidia_quadro_5000_8355519198?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSSpl7mnG5uWlISG5iVnK8c0VSUWWeo5J1LSAAAP__-FFvEkYAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/tovary_dlya_kompyutera/nvidia_quadro_5000_8355519198?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSSpl7mnG5uWlISG5iVnK8c0VSUWWeo5J1LSAAAP__-FFvEkYAAAA'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:23:52[0m | [1mINFO    [0m | [36mparser.avito_parser[0m:[36mparse_listing[0m:[36m79[0m - [1mAvito card 8438104690 fetched via mobile API[0m
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:24:27[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/nastolnye_kompyutery/ii_serverrabochaya_stantsiya_8164253938?context=H4sIAAAAAAAA_wEmANn_YToxOntzOjE6IngiO3M6MTY6IkVwZFJmVnJJbk5DT0hMZHQiO33xNnhEJgAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/nastolnye_kompyutery/ii_serverrabochaya_stantsiya_8164253938?context=H4sIAAAAAAAA_wEmANn_YToxOntzOjE6IngiO3M6MTY6IkVwZFJmVnJJbk5DT0hMZHQiO33xNnhEJgAAAA'
+[32m2026-10-20 18:24:53[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/amurskaya_oblast_blagoveschensk/tovary_dlya_kompyutera/nvidia_tesla_v100_32_gb_pcie_korpus_turbo_8209605267?context=H4sIAAAAAAAA_wEmANn_YToxOntzOjE6IngiO3M6MTY6IkVwZFJmVnJJbk5DT0hMZHQiO33xNnhEJgAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/amurskaya_oblast_blagoveschensk/tovary_dlya_kompyutera/nvidia_tesla_v100_32_gb_pcie_korpus_turbo_8209605267?context=H4sIAAAAAAAA_wEmANn_YToxOntzOjE6IngiO3M6MTY6IkVwZFJmVnJJbk5DT0hMZHQiO33xNnhEJgAAAA'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:26:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 8 active, 0 due[0m
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:30:35[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/kvartiry/2-k._kvartira_455_m_112_et._8389909740?context=H4sIAAAAAAAA_wEmANn_YToxOntzOjE6IngiO3M6MTY6IjJySENVMEpFNnVtdENkNjkiO30BYrJzJgAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/kvartiry/2-k._kvartira_455_m_112_et._8389909740?context=H4sIAAAAAAAA_wEmANn_YToxOntzOjE6IngiO3M6MTY6IjJySENVMEpFNnVtdENkNjkiO30BYrJzJgAAAA'
+[32m2026-10-20 18:31:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 0 due[0m
+[32m2026-10-20 18:36:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 1 due[0m
+[32m2026-10-20 18:36:17[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:41:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 2 due[0m
+[32m2026-10-20 18:46:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 2 due[0m
+[32m2026-10-20 18:46:18[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:51:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 0 due[0m
+[32m2026-10-20 18:52:17[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA: Client error '429 Too Many Requests' for url 'https://www.avito.ru/moskva/kvartiry/1-k._kvartira_35_m_1012_et._8438104690?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSRHZGpa6JS2SgmbuHSZluSaVZZYZjuZJ1LSAAAP__nJm3XEYAAAA'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429 — falling back to mock[0m
+[32m2026-10-20 18:53:33[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/sankt-peterburg/noutbuki/huawei_matebook_d_15_2024_r7-5700u_16512gb_8543325725: Client error '439 Unknown' for url 'https://www.avito.ru/sankt-peterburg/noutbuki/huawei_matebook_d_15_2024_r7-5700u_16512gb_8543325725'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:56:04[0m | [1mINFO    [0m | [36mparser.avito_parser[0m:[36mparse_listing[0m:[36m79[0m - [1mAvito card 7257735331 fetched via mobile API[0m
+[32m2026-10-20 18:56:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 5 active, 0 due[0m
+WARNING:  Invalid HTTP request received.
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 18:57:45[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/sankt-peterburg/nastolnye_kompyutery/kompyuter_rtx_3070_ryzen_5_5600_8327671375: Client error '439 Unknown' for url 'https://www.avito.ru/sankt-peterburg/nastolnye_kompyutery/kompyuter_rtx_3070_ryzen_5_5600_8327671375'
+[32m2026-10-20 18:59:06[0m | [1mINFO    [0m | [36mparser.avito_parser[0m:[36mparse_listing[0m:[36m79[0m - [1mAvito card 8467501967 fetched via mobile API[0m
+[32m2026-10-20 19:01:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 7 active, 0 due[0m
+[32m2026-10-20 19:01:51[0m | [1mINFO    [0m | [36mparser.avito_parser[0m:[36mparse_listing[0m:[36m79[0m - [1mAvito card 8485008012 fetched via mobile API[0m
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/439 — falling back to mock[0m
+[32m2026-10-20 19:03:55[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_parse_html[0m:[36m172[0m - [33m[1mAvito HTML parse failed for https://www.avito.ru/moskva/kvartiry/1-k._kvartira_36_m_312_et._4055830525: Client error '439 Unknown' for url 'https://www.avito.ru/moskva/kvartiry/1-k._kvartira_36_m_312_et._4055830525'
+[32m2026-10-20 19:06:17[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 9 active, 2 due[0m
+Received SIGTERM signal
+Received SIGTERM signal
+[32m2026-10-20 19:06:47[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m137[0m - [1mMarketTracker stopped.[0m
+[32m2026-10-20 19:07:03[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m46[0m - [1mDatabase initialized.[0m
+[32m2026-10-20 19:07:03[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m113[0m - [1mScheduler started (tick every 5 min).[0m
+[32m2026-10-20 19:07:03[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m125[0m - [1mMini App served at http://0.0.0.0:8000[0m
+[32m2026-10-20 19:09:50[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 1/3, waiting 20.0s[0m
+[32m2026-10-20 19:10:12[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 2/3, waiting 20.0s[0m
+[32m2026-10-20 19:10:31[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 1/3, waiting 20.0s[0m
+[32m2026-10-20 19:10:37[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 3/3, waiting 20.0s[0m
+[32m2026-10-20 19:10:52[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 2/3, waiting 20.0s[0m
+[32m2026-10-20 19:11:13[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 3/3, waiting 20.0s[0m
+[32m2026-10-20 19:12:03[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 2 active, 0 due[0m
+Received SIGTERM signal
+Received SIGTERM signal
+[32m2026-10-20 19:14:47[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m137[0m - [1mMarketTracker stopped.[0m
+[32m2026-10-20 19:15:03[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m46[0m - [1mDatabase initialized.[0m
+[32m2026-10-20 19:15:04[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m113[0m - [1mScheduler started (tick every 5 min).[0m
+[32m2026-10-20 19:15:04[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m125[0m - [1mMini App served at http://0.0.0.0:8000[0m
+[32m2026-10-20 19:15:20[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 1/3, waiting 20.0s[0m
+[32m2026-10-20 19:15:42[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 2/3, waiting 20.0s[0m
+[32m2026-10-20 19:16:03[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 3/3, waiting 20.0s[0m
+[32m2026-10-20 19:20:04[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 2 active, 0 due[0m
+[32m2026-10-20 19:25:04[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 2 active, 0 due[0m
+[32m2026-10-20 19:30:04[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 2 active, 0 due[0m
+[32m2026-10-20 19:35:04[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 2 active, 2 due[0m
+[32m2026-10-20 19:35:04[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 1/3, waiting 20.0s[0m
+[32m2026-10-20 19:35:25[0m | [1mINFO    [0m | [36mparser.avito_parser[0m:[36mparse_listing[0m:[36m82[0m - [1mAvito card 8374777460 fetched via mobile API[0m
+Received SIGTERM signal
+Received SIGTERM signal
+[32m2026-10-20 19:37:21[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m137[0m - [1mMarketTracker stopped.[0m
+[32m2026-10-20 19:37:35[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m46[0m - [1mDatabase initialized.[0m
+[32m2026-10-20 19:37:35[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m113[0m - [1mScheduler started (tick every 5 min).[0m
+[32m2026-10-20 19:37:35[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m125[0m - [1mMini App served at http://0.0.0.0:8000[0m
+[32m2026-10-20 19:38:03[0m | [1mINFO    [0m | [36mparser.avito_parser[0m:[36mparse_listing[0m:[36m82[0m - [1mAvito card 8438104690 fetched via mobile API[0m
+[32m2026-10-20 19:38:44[0m | [1mINFO    [0m | [36mparser.avito_parser[0m:[36mparse_listing[0m:[36m82[0m - [1mAvito card 8374777460 fetched via mobile API[0m
+[32m2026-10-20 19:39:15[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 1/3, waiting 20.0s[0m
+[32m2026-10-20 19:39:36[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 2/3, waiting 20.0s[0m
+[32m2026-10-20 19:39:57[0m | [33m[1mWARNING [0m | [36mparser.avito_parser[0m:[36m_fetch_mobile_api[0m:[36m130[0m - [33m[1mAvito blocked/limited (439) attempt 3/3, waiting 20.0s[0m
+[32m2026-10-20 19:42:35[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 3 active, 0 due[0m
+[32m2026-10-20 19:47:35[0m | [1mINFO    [0m | [36mscheduler.jobs[0m:[36mcheck_prices[0m:[36m27[0m - [1mPrice check: 3 active, 0 due[0m
+Received SIGTERM signal
+Received SIGTERM signal
+[32m2026-10-20 19:50:55[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m137[0m - [1mMarketTracker stopped.[0m
+[32m2026-10-20 19:51:11[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m47[0m - [1mDatabase initialized.[0m
+[32m2026-10-20 19:51:11[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m50[0m - [1mParser proxy: <empty>[0m
+[32m2026-10-20 19:51:11[0m | [33m[1mWARNING [0m | [36m__main__[0m:[36mmain[0m:[36m60[0m - [33m[1mProxy check FAILED: PARSER_PROXY_URL is empty[0m
+[32m2026-10-20 19:51:11[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m127[0m - [1mScheduler started (tick every 5 min).[0m
+[32m2026-10-20 19:51:11[0m | [1mINFO    [0m | [36m__main__[0m:[36mmain[0m:[36m139[0m - [1mMini App served at http://0.0.0.0:8000[0m
+[32m2026-10-20 19:52:27[0m | [33m[1mWARNING [0m | [36mparser.http[0m:[36mget_cffi_session[0m:[36m64[0m - [33m[1mcurl_cffi session created WITHOUT proxy (PARSER_PROXY_URL empty)[0m
+[32m2026-10-20 19:52:38[0m | [1mINFO    [0m | [36mparser.avito_parser[0m:[36mparse_listing[0m:[36m82[0m - [1mAvito card 8177665483 fetched via mobile API[0m
