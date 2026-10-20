@@ -63,19 +63,27 @@ async def _get_user_id(session, telegram_id: int) -> int:
     return user.id
 
 
-def _track_payload(track, change_7d: float | None) -> dict:
+def _body_float(body: dict, key: str, default: float | None = None) -> float | None:
+    if key in body and body[key] not in (None, ""):
+        return float(body[key])
+    return default
+
+
+def _track_payload(track, change_7d: float | None, history: list[float]) -> dict:
     return {
         "id": track.id,
         "title": track.title,
         "marketplace": track.marketplace.value,
         "url": track.url,
         "current_price": track.current_price,
+        "last_checked_price": track.last_checked_price,
         "target_price": track.target_price,
         "alert_drop_percent": track.alert_drop_percent,
         "alert_rise_percent": track.alert_rise_percent,
         "is_active": track.is_active,
         "image_url": track.image_url,
         "change_7d": change_7d,
+        "history": history,
     }
 
 
@@ -107,7 +115,8 @@ async def tracks(tg_id: int = Depends(current_telegram_id)) -> list[dict]:
             change = None
             if first and track.current_price:
                 change = round((track.current_price - first) / first * 100.0, 1)
-            result.append(_track_payload(track, change))
+            hist = await history_repo.get_history(session, track.id, limit=12)
+            result.append(_track_payload(track, change, [h.price for h in hist]))
         await session.commit()
     return result
 
@@ -141,6 +150,9 @@ async def add_track(body: dict, tg_id: int = Depends(current_telegram_id)) -> di
             title=listing.title or "Без названия",
             current_price=listing.price,
             image_url=listing.image_url,
+            alert_drop_percent=_body_float(body, "alert_drop_percent", 5.0),
+            alert_rise_percent=_body_float(body, "alert_rise_percent"),
+            target_price=_body_float(body, "target_price"),
         )
         if track.current_price is not None:
             await history_repo.add_history(session, track.id, track.current_price)
@@ -186,6 +198,8 @@ async def patch_track(track_id: int, body: dict, tg_id: int = Depends(current_te
         if "alert_rise_percent" in body:
             value = body["alert_rise_percent"]
             track.alert_rise_percent = float(value) if value else None
+        if "is_active" in body:
+            track.is_active = bool(body["is_active"])
         await session.commit()
 
     return {"ok": True}
@@ -199,5 +213,17 @@ async def stop_track(track_id: int, tg_id: int = Depends(current_telegram_id)) -
         if track is None:
             raise HTTPException(status_code=404, detail="Track not found")
         await track_repo.deactivate_track(session, track)
+        await session.commit()
+    return {"ok": True}
+
+
+@app.delete("/api/tracks/{track_id}")
+async def delete_track(track_id: int, tg_id: int = Depends(current_telegram_id)) -> dict:
+    async with async_session_factory() as session:
+        user_id = await _get_user_id(session, tg_id)
+        track = await track_repo.get_track(session, track_id, user_id=user_id)
+        if track is None:
+            raise HTTPException(status_code=404, detail="Track not found")
+        await session.delete(track)
         await session.commit()
     return {"ok": True}
