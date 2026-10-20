@@ -71,20 +71,27 @@ function sparkline(vals) {
   return `<svg class="mini-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
-function lineChart(vals, w = 450, h = 140) {
-  vals = (vals && vals.length > 1) ? vals : [0, 0];
-  const min = Math.min(...vals), max = Math.max(...vals), range = (max - min) || 1;
-  const pad = 8;
+function priceChart(vals, w = 450, h = 140) {
+  vals = (vals && vals.length) ? vals.slice() : [0];
+  if (vals.length === 1) vals = [vals[0], vals[0]];
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const flat = max === min;
+  const range = flat ? 1 : (max - min);
+  const padX = 42, padTop = 12, padBot = 16;
+  const iw = w - padX - 8, ih = h - padTop - padBot;
+  const yFor = v => flat ? padTop + ih / 2 : padTop + ih - ((v - min) / range) * ih;
   const pts = vals.map((v, idx) => {
-    const x = pad + (idx / (vals.length - 1)) * (w - pad * 2);
-    const y = h - pad - ((v - min) / range) * (h - pad * 2);
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
+    const x = padX + (idx / (vals.length - 1)) * iw;
+    return `${x.toFixed(1)},${yFor(v).toFixed(1)}`;
   }).join(" ");
-  const area = `M${pad},${h - pad} L${pts.replaceAll(",", " ")} L${w - pad},${h - pad} Z`;
-  return `<svg class="history-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:140px;margin-top:3px">
-    <defs><linearGradient id="mtFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#22a765" stop-opacity=".18"/><stop offset="1" stop-color="#22a765" stop-opacity="0"/></linearGradient></defs>
-    <g stroke="#edf1ed" stroke-dasharray="3 4"><path d="M0 ${h/4}H${w}M0 ${h/2}H${w}M0 ${h*3/4}H${w}"/></g>
-    <path d="${area}" fill="url(#mtFill)"/>
+  const area = `M${padX},${padTop + ih} L${pts.replaceAll(",", " ")} L${padX + iw},${padTop + ih} Z`;
+  const mid = (min + max) / 2;
+  const fmt = v => Math.round(v).toLocaleString("ru-RU");
+  return `<svg class="history-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:${h}px;margin-top:3px">
+    <defs><linearGradient id="hcFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#22a765" stop-opacity=".18"/><stop offset="1" stop-color="#22a765" stop-opacity="0"/></linearGradient></defs>
+    <g stroke="#edf1ed" stroke-dasharray="4 5"><path d="M${padX} ${padTop}H${w-8}M${padX} ${padTop+ih/2}H${w-8}M${padX} ${padTop+ih}H${w-8}"/></g>
+    <g fill="#9ba69f" font-size="11"><text x="0" y="${padTop+4}">${fmt(max)}</text><text x="0" y="${padTop+ih/2+4}">${fmt(mid)}</text><text x="0" y="${padTop+ih+4}">${fmt(min)}</text></g>
+    <path d="${area}" fill="url(#hcFill)"/>
     <polyline points="${pts}" fill="none" stroke="#1eaa66" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
 }
@@ -157,14 +164,17 @@ function renderTable() {
 
 function renderStats() {
   const n = items.length;
-  document.getElementById("navCount").textContent = n;
-  document.getElementById("statTracked").textContent = n;
-  document.getElementById("filterAllCount").textContent = n;
+  const navCount = document.getElementById("navCount");
+  if (navCount) { navCount.textContent = n; navCount.style.display = n > 0 ? "" : "none"; }
+  const statTracked = document.getElementById("statTracked");
+  if (statTracked) statTracked.textContent = n;
+  const filterAll = document.getElementById("filterAllCount");
+  if (filterAll) { filterAll.textContent = n; filterAll.style.display = n > 0 ? "" : "none"; }
 }
 
-function renderAll() { renderStats(); renderGrid(); renderTable(); }
+function renderAll() { renderStats(); renderGrid(); renderTable(); renderHistoryAside(); }
 
-function navigate(page) {
+function navigate(page, historyId = null) {
   document.querySelectorAll(".page-section").forEach(s => s.classList.remove("active"));
   const target = document.getElementById("page-" + page);
   if (target) target.classList.add("active");
@@ -173,6 +183,8 @@ function navigate(page) {
   document.getElementById("topPageTitle").textContent = names[page] || "Ценолов";
   if (page === "tracks") renderTable();
   if (page === "overview") renderGrid();
+  if (page === "alerts") loadAlerts();
+  if (page === "history") renderHistory(historyId);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -206,11 +218,18 @@ async function openDetail(id) {
   document.getElementById("detailStatus").textContent = i.active ? "Активно" : "Пауза";
   document.getElementById("detailBadge").textContent = pct(i.change);
 
+  const dTarget = document.getElementById("dTarget");
+  if (dTarget) dTarget.value = i.target ?? "";
+  const dDrop = document.getElementById("dDrop");
+  if (dDrop) dDrop.value = i.alert_drop_percent ?? "";
+  const dRise = document.getElementById("dRise");
+  if (dRise) dRise.value = i.alert_rise_percent ?? "";
+
   const pauseBtn = document.getElementById("detailPause");
   if (pauseBtn) pauseBtn.innerHTML = icon(i.active ? "pause" : "play") + (i.active ? " Приостановить" : " Продолжить");
 
   const chartEl = document.querySelector("#detailModal svg.history-chart");
-  if (chartEl) chartEl.outerHTML = lineChart(hist);
+  if (chartEl) chartEl.outerHTML = priceChart(hist, 450, 140);
 
   const linkEl = document.getElementById("detailOpenLink");
   if (linkEl) linkEl.onclick = () => { const tg = window.Telegram && window.Telegram.WebApp; if (tg && tg.openLink) tg.openLink(i.url); else window.open(i.url, "_blank"); };
@@ -243,17 +262,18 @@ async function removeTrack(id) {
   } catch (e) { showToast(e.message); }
 }
 
-async function editTarget() {
+async function saveDetailSettings() {
   if (!currentDetailId) return;
-  const i = items.find(x => x.id === currentDetailId);
-  if (!i) return;
-  const v = prompt("Целевая цена, ₽ (0 — отключить):", i.target || "");
-  if (v == null) return;
+  const body = {
+    target_price: document.getElementById("dTarget").value || null,
+    alert_drop_percent: document.getElementById("dDrop").value || null,
+    alert_rise_percent: document.getElementById("dRise").value || null,
+  };
   try {
-    await api(`/api/tracks/${currentDetailId}`, { method: "PATCH", body: JSON.stringify({ target_price: parseFloat(v) || null }) });
+    await api(`/api/tracks/${currentDetailId}`, { method: "PATCH", body: JSON.stringify(body) });
     await loadAll();
     openDetail(currentDetailId);
-    showToast("Целевая цена обновлена");
+    showToast("Условия сохранены 💚");
   } catch (e) { showToast(e.message); }
 }
 
@@ -289,14 +309,49 @@ async function submitAdd(e) {
 
 // ---------- Load ----------
 async function loadAll() {
-  const [me, tracks] = await Promise.all([api("/api/me"), api("/api/tracks")]);
+  const [me, tracks, alerts] = await Promise.all([api("/api/me"), api("/api/tracks"), api("/api/alerts")]);
   items = tracks.map(mapTrack);
-  const count = document.getElementById("statTracked");
   renderAll();
+  renderAccount(me);
+  renderSettings(me);
+  renderAlertsBadge(me.alerts_count || 0);
+  renderOverviewAside(alerts);
+}
+
+function renderAccount(me) {
+  const plan = document.getElementById("profilePlan");
+  if (plan) plan.textContent = me.is_premium ? "PRO тариф" : "Бесплатный тариф";
+}
+
+function setSwitch(key, on) {
+  const el = document.querySelector(`[data-notify="${key}"], [data-setting="${key}"]`);
+  if (el) el.classList.toggle("on", !!on);
+}
+function renderSettings(me) {
+  setSwitch("drop", me.notify_drop);
+  setSwitch("target", me.notify_target);
+  setSwitch("rise", me.notify_rise);
+  setSwitch("notify_daily_digest", me.notify_daily_digest);
+  const freq = document.getElementById("checkFrequency");
+  if (freq) freq.value = String(me.check_interval_minutes || 15);
 }
 
 // ---------- Misc ----------
-function toggleSwitch(el) { el.classList.toggle("on"); }
+async function toggleSwitch(el) {
+  const key = el.dataset.notify;
+  const setting = el.dataset.setting;
+  if (!key && !setting) { el.classList.toggle("on"); return; }
+  el.classList.toggle("on");
+  const value = el.classList.contains("on");
+  const body = key ? { ["notify_" + key]: value } : { [setting]: value };
+  try {
+    await api("/api/settings", { method: "PATCH", body: JSON.stringify(body) });
+    showToast("Настройки сохранены");
+  } catch (e) {
+    el.classList.toggle("on");
+    showToast(e.message);
+  }
+}
 
 function showToast(msg) {
   const t = document.getElementById("toast");
@@ -304,6 +359,187 @@ function showToast(msg) {
   t.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove("show"), 2700);
+}
+
+// ---------- Alerts ----------
+const ALERT_ICONS = { DROP: "arrow-up", RISE: "chart", TARGET: "target", REMOVED: "trash" };
+function alertText(a) {
+  const o = money(a.old_price), n = money(a.new_price);
+  switch (a.alert_type) {
+    case "DROP": return `Цена снизилась на <b>${o} → ${n}</b>`;
+    case "RISE": return `Цена выросла до <b>${n}</b>`;
+    case "TARGET": return `Достигнута целевая цена <b>${n}</b>`;
+    case "REMOVED": return `Объявление снято с продажи`;
+    default: return "Изменение цены";
+  }
+}
+function alertTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString("ru-RU", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+}
+async function markAllRead() {
+  try {
+    await api("/api/alerts/read-all", { method: "POST" });
+    renderAlertsBadge(0);
+    await loadAlerts();
+    showToast("Все уведомления отмечены прочитанными");
+  } catch (e) { showToast(e.message); }
+}
+
+async function loadAlerts() {
+  try {
+    const list = await api("/api/alerts");
+    renderAlertsBadge(list.length);
+    const box = document.getElementById("alertsList");
+    if (!box) return;
+    if (!list.length) {
+      box.innerHTML = '<div class="empty">Пока нет уведомлений.<br/>Они появятся, когда цена изменится.</div>';
+      return;
+    }
+    box.innerHTML = list.map(a => `
+      <section class="panel" style="margin-top:14px"><div class="alert-item">
+        <div class="alert-avatar">${icon(ALERT_ICONS[a.alert_type] || "bell")}</div>
+        <div class="alert-copy"><strong>${escapeHtml(a.title)}</strong><p>${alertText(a)}</p></div>
+        <span class="alert-time">${alertTime(a.sent_at)}</span>
+      </div></section>`).join("");
+  } catch (e) { /* ignore */ }
+}
+
+// ---------- History ----------
+function renderHistoryAside() {
+  const box = document.getElementById("historyTopChanges");
+  if (box) {
+    const changed = items
+      .filter(i => i.delta != null && i.delta !== 0)
+      .sort((a, b) => Math.abs(b.change || 0) - Math.abs(a.change || 0))
+      .slice(0, 4);
+    box.innerHTML = changed.length
+      ? changed.map(i => {
+          const up = (i.change || 0) > 0;
+          const amount = Math.abs(Math.round(i.delta));
+          const moneyDelta = amount ? `${up ? "+" : "−"}${amount.toLocaleString("ru-RU")} ₽` : "";
+          return `<div class="alert-item"><div class="alert-avatar ${up ? "amber" : ""}">${icon(up ? "chart" : "arrow-up")}</div><div class="alert-copy"><strong>${escapeHtml(i.name)}</strong><p>${up ? "Рост" : "Снижение"} на ${Math.abs(i.change || 0).toLocaleString("ru-RU", { maximumFractionDigits: 1 })}%</p></div><strong style="color:${up ? "#cc7955" : "#168653"};font-size:11px">${moneyDelta}</strong></div>`;
+        }).join("")
+      : '<div class="empty" style="padding:14px 0;color:#8a978e;font-size:11px">Пока нет изменений цен.</div>';
+  }
+
+  const avgEl = document.getElementById("historyAvgChange");
+  if (avgEl) {
+    const active = items.filter(i => i.active);
+    const changes = active.map(i => i.change).filter(x => x != null);
+    const avg = changes.length ? changes.reduce((a, b) => a + b, 0) / changes.length : null;
+    avgEl.textContent = avg == null ? "—" : pct(avg);
+  }
+}
+
+function renderHistory(preferredId = null) {
+  renderHistoryAside();
+  const sel = document.getElementById("historyProduct");
+  if (!sel) return;
+  sel.innerHTML = items.map(i => `<option value="${i.id}">${escapeHtml(i.name)}</option>`).join("");
+  const targetId = preferredId != null ? preferredId : (items[0] ? items[0].id : null);
+  const period = document.getElementById("historyPeriod");
+  const days = period ? Number(period.value) : 30;
+  if (targetId != null) {
+    sel.value = String(targetId);
+    showHistoryChart(Number(targetId), days);
+  } else if (document.getElementById("historyBig")) {
+    document.getElementById("historyBig").textContent = "—";
+  }
+}
+async function showHistoryChart(id, days = 30) {
+  const i = items.find(x => x.id === id);
+  if (!i) return;
+  let hist = [];
+  try { hist = (await api(`/api/tracks/${id}/history?days=${days}`)).map(h => h.price); } catch (e) {}
+  if (!hist.length) hist = i.history || [];
+  if (!hist.length) hist = [i.price];
+  const first = hist[0], last = hist[hist.length - 1];
+  const change = first ? ((last - first) / first) * 100 : 0;
+  const big = document.getElementById("historyBig");
+  if (big) big.textContent = pct(change);
+  const el = document.querySelector("#page-history svg.history-chart");
+  if (el) el.outerHTML = priceChart(hist, 700, 280);
+}
+
+// ---------- Overview aside (динамика + последние события) ----------
+function aggregateSeries(tracks) {
+  const series = tracks
+    .filter(t => t.history && t.history.length >= 2)
+    .map(t => {
+      const base = t.history[0] || 1;
+      return t.history.map(v => (base ? (v / base) * 100 : 100));
+    });
+  if (!series.length) return null;
+  const len = Math.min(...series.map(s => s.length));
+  const avg = [];
+  for (let i = 0; i < len; i++) {
+    avg.push(series.reduce((sum, s) => sum + s[i], 0) / series.length);
+  }
+  return avg;
+}
+
+function renderOverviewAside(alerts) {
+  const active = items.filter(i => i.active);
+  const changes = active.map(i => i.change).filter(x => x != null);
+  const avg = changes.length ? changes.reduce((a, b) => a + b, 0) / changes.length : null;
+
+  const dynBig = document.getElementById("dynBig");
+  const dynSmall = document.getElementById("dynSmall");
+  if (dynBig) dynBig.textContent = avg == null ? "—" : pct(avg);
+  if (dynSmall) dynSmall.textContent = avg == null ? "" : (avg < 0 ? "↓ дешевле" : avg > 0 ? "↑ дороже" : "→ без изменений");
+
+  const summary = document.querySelector(".summary-chart");
+  if (summary) {
+    const series = aggregateSeries(active);
+    if (series) summary.outerHTML = priceChart(series, 270, 135);
+  }
+
+  // статистика обзора
+  const nearCount = active.filter(i => i.near).length;
+  const statNear = document.getElementById("statNear");
+  if (statNear) statNear.textContent = nearCount;
+  const statAvg = document.getElementById("statAvgChange");
+  if (statAvg) statAvg.textContent = avg == null ? "—" : pct(avg);
+  const statAlerts = document.getElementById("statAlerts");
+  if (statAlerts) statAlerts.textContent = (alerts || []).length;
+
+  // цель на месяц (потенциальная экономия)
+  let savings = 0;
+  for (const i of active) {
+    if (i.target && i.price != null && i.price > i.target) savings += i.price - i.target;
+  }
+  const goalAmount = document.getElementById("goalAmount");
+  if (goalAmount) goalAmount.textContent = money(savings);
+  const goalProgress = document.getElementById("goalProgress");
+  const goalPct = active.length ? Math.round((nearCount / active.length) * 100) : 0;
+  if (goalProgress) goalProgress.style.width = goalPct + "%";
+  const goalNote = document.getElementById("goalNote");
+  if (goalNote) goalNote.textContent = active.length
+    ? `${nearCount} из ${active.length} товаров близки к цели.`
+    : "Добавьте товары, чтобы видеть экономию.";
+
+  const activeIds = new Set(active.map(i => i.id));
+  const recent = (alerts || []).filter(a => activeIds.has(a.track_id)).slice(0, 3);
+  const box = document.getElementById("recentEvents");
+  if (box) {
+    box.innerHTML = recent.length
+      ? recent.map(a => `<div class="alert-item"><div class="alert-avatar">${icon(ALERT_ICONS[a.alert_type] || "bell")}</div><div class="alert-copy"><strong>${escapeHtml(a.title)}</strong><p>${alertText(a)}</p></div><span class="alert-time">${alertTime(a.sent_at)}</span></div>`).join("")
+      : '<div class="empty" style="padding:20px 0">Пока нет событий.</div>';
+  }
+}
+
+// ---------- Alerts badge + history navigation ----------
+function renderAlertsBadge(n) {
+  const el = document.getElementById("alertsCount");
+  if (!el) return;
+  el.textContent = n;
+  el.style.display = n > 0 ? "" : "none";
+}
+
+function openHistoryFor(id) {
+  closeModal("detailModal");
+  navigate("history", id);
 }
 
 // ---------- Init ----------
@@ -350,28 +586,37 @@ function showToast(msg) {
   // add form
   const form = document.getElementById("addForm");
   if (form) form.addEventListener("submit", submitAdd);
+  const freq = document.getElementById("checkFrequency");
+  if (freq) freq.addEventListener("change", async () => {
+    try {
+      await api("/api/settings", { method: "PATCH", body: JSON.stringify({ check_interval_minutes: Number(freq.value) }) });
+      showToast("Частота проверок обновлена");
+    } catch (e) { showToast(e.message); }
+  });
 
   // Esc
   document.addEventListener("keydown", e => { if (e.key === "Escape") document.querySelectorAll(".modal-backdrop.open").forEach(m => m.classList.remove("open")); });
 
   // инжектируем кнопки в карточку товара
   const pauseBtn = document.getElementById("detailPause");
-  if (pauseBtn) {
-    const row = pauseBtn.parentElement;
-    if (row && !document.getElementById("btnEditTarget")) {
-      const edit = document.createElement("button");
-      edit.className = "btn btn-light"; edit.id = "btnEditTarget";
-      edit.style.marginLeft = "8px";
-      edit.innerHTML = icon("target") + " Цель";
-      edit.onclick = editTarget;
-      const del = document.createElement("button");
-      del.className = "btn btn-light"; del.style.marginLeft = "8px";
-      del.innerHTML = icon("trash") + " Удалить";
-      del.onclick = () => removeTrack(currentDetailId);
-      row.insertAdjacentElement("afterend", edit);
-      edit.insertAdjacentElement("afterend", del);
-    }
+  if (pauseBtn && !document.getElementById("btnDelete")) {
+    const del = document.createElement("button");
+    del.className = "btn btn-light"; del.id = "btnDelete";
+    del.style.marginLeft = "8px";
+    del.innerHTML = icon("trash") + " Удалить";
+    del.onclick = () => removeTrack(currentDetailId);
+    pauseBtn.insertAdjacentElement("afterend", del);
   }
+  const dSave = document.getElementById("dSave");
+  if (dSave) dSave.addEventListener("click", saveDetailSettings);
+  const historySel = document.getElementById("historyProduct");
+  if (historySel) historySel.addEventListener("change", () => showHistoryChart(Number(historySel.value)));
+  const historyPeriod = document.getElementById("historyPeriod");
+  if (historyPeriod) historyPeriod.addEventListener("change", () => {
+    const sel = document.getElementById("historyProduct");
+    const id = sel && sel.value ? Number(sel.value) : (items[0] ? items[0].id : null);
+    if (id != null) showHistoryChart(id, Number(historyPeriod.value));
+  });
 
   // загрузка данных
   loadAll().catch(e => showToast(e.message));

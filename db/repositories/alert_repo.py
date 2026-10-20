@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.enums import AlertType
-from db.models import AlertLog
+from db.models import AlertLog, Track
 
 
 async def create_alert(
@@ -48,3 +48,53 @@ async def has_recent_alert(
     )
     result = await session.execute(stmt)
     return result.scalar_one_or_none() is not None
+
+
+async def count_alerts_for_user(session: AsyncSession, user_id: int) -> int:
+    stmt = (
+        select(func.count(AlertLog.id))
+        .join(Track, AlertLog.track_id == Track.id)
+        .where(Track.user_id == user_id)
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one() or 0
+
+
+async def count_unread_alerts(session: AsyncSession, user_id: int) -> int:
+    stmt = (
+        select(func.count(AlertLog.id))
+        .join(Track, AlertLog.track_id == Track.id)
+        .where(Track.user_id == user_id, AlertLog.is_read.is_(False))
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one() or 0
+
+
+async def mark_all_read(session: AsyncSession, user_id: int) -> None:
+    from sqlalchemy import update
+
+    stmt = (
+        update(AlertLog)
+        .where(
+            AlertLog.track_id.in_(
+                select(Track.id).where(Track.user_id == user_id)
+            )
+        )
+        .values(is_read=True)
+    )
+    await session.execute(stmt)
+
+
+async def list_alerts_for_user(
+    session: AsyncSession, user_id: int, limit: int = 30
+) -> list[tuple[AlertLog, str]]:
+    """Return (alert, track_title) pairs for a user, newest first."""
+    stmt = (
+        select(AlertLog, Track.title)
+        .join(Track, AlertLog.track_id == Track.id)
+        .where(Track.user_id == user_id)
+        .order_by(AlertLog.sent_at.desc(), AlertLog.id.desc())
+        .limit(limit)
+    )
+    result = await session.execute(stmt)
+    return list(result.all())

@@ -9,6 +9,8 @@ aiohttp-socks>=0.8,<1.0
 # [asyncio] extra pulls in greenlet, required by SQLAlchemy async engine
 SQLAlchemy[asyncio]>=2.0.30,<3.0
 aiosqlite>=0.20,<1.0
+# PostgreSQL driver (для облачного деплоя; локально можно не использовать)
+asyncpg>=0.29,<1.0
 
 # --- Scheduler ---
 APScheduler>=3.10.4,<4.0

@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import AliasChoices, Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Project root = parent of the `config/` package.
@@ -38,7 +38,8 @@ class Settings(BaseSettings):
     # --- Database ---
     db_url: str = Field(
         default="sqlite+aiosqlite:///data/market_tracker.db",
-        description="SQLAlchemy async database URL",
+        validation_alias=AliasChoices("db_url", "database_url"),
+        description="SQLAlchemy async database URL (DB_URL or Render's DATABASE_URL)",
     )
 
     # --- Scheduler ---
@@ -82,7 +83,8 @@ class Settings(BaseSettings):
     webapp_port: int = Field(default=8000, description="Mini App port")
     webapp_url: str | None = Field(
         default=None,
-        description="Public HTTPS URL of the Mini App (for the bot menu button)",
+        validation_alias=AliasChoices("webapp_url", "render_external_url"),
+        description="Public HTTPS URL of the Mini App (WEBAPP_URL or Render's RENDER_EXTERNAL_URL)",
     )
     webapp_dev_mode: bool = Field(
         default=False,
@@ -108,6 +110,22 @@ class Settings(BaseSettings):
         ge=1,
         description="Minimum hours between repeated alerts for the same track",
     )
+
+    # --- Cloud keep-alive ---
+    keep_alive: bool = Field(
+        default=False,
+        description="Self-ping the Mini App URL so Render's free tier does not sleep",
+    )
+
+    @model_validator(mode="after")
+    def _normalize_db_url(self) -> "Settings":
+        """Rewrite postgres://… to postgresql+asyncpg://… for SQLAlchemy async."""
+        raw = self.db_url
+        if raw.startswith("postgres://"):
+            self.db_url = "postgresql+asyncpg://" + raw[len("postgres://"):]
+        elif raw.startswith("postgresql://"):
+            self.db_url = "postgresql+asyncpg://" + raw[len("postgresql://"):]
+        return self
 
 
 # Singleton used across the whole application.

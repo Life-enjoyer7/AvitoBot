@@ -29,6 +29,11 @@ class User(Base):
     telegram_id: Mapped[int] = mapped_column(Integer, unique=True, index=True, nullable=False)
     username: Mapped[str | None] = mapped_column(String(255), nullable=True)
     is_premium: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    notify_drop: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    notify_rise: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    notify_target: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    notify_daily_digest: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    check_interval_minutes: Mapped[int] = mapped_column(Integer, default=15, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), nullable=False
     )
@@ -111,5 +116,6 @@ class AlertLog(Base):
     sent_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), nullable=False
     )
+    is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     track: Mapped[Track] = relationship(back_populates="alerts")

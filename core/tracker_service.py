@@ -33,6 +33,17 @@ def detect_alert(track: Track, new_price: float | None) -> AlertType | None:
     return None
 
 
+def user_wants_alert(user, alert_type: AlertType) -> bool:
+    """Return True if the user enabled this alert type in global settings."""
+    if alert_type == AlertType.DROP:
+        return bool(getattr(user, "notify_drop", True))
+    if alert_type == AlertType.RISE:
+        return bool(getattr(user, "notify_rise", True))
+    if alert_type == AlertType.TARGET:
+        return bool(getattr(user, "notify_target", True))
+    return True  # REMOVED и прочие — всегда
+
+
 def build_alert_message(
     track: Track,
     alert_type: AlertType,

@@ -44,6 +44,24 @@ def _migrate_columns(sync_conn) -> None:
         if "image_url" not in columns:
             sync_conn.execute(text("ALTER TABLE tracks ADD COLUMN image_url VARCHAR(2048)"))
 
+    if "users" in inspector.get_table_names():
+        user_columns = {c["name"] for c in inspector.get_columns("users")}
+        if "notify_drop" not in user_columns:
+            sync_conn.execute(text("ALTER TABLE users ADD COLUMN notify_drop BOOLEAN DEFAULT 1"))
+        if "notify_rise" not in user_columns:
+            sync_conn.execute(text("ALTER TABLE users ADD COLUMN notify_rise BOOLEAN DEFAULT 1"))
+        if "notify_target" not in user_columns:
+            sync_conn.execute(text("ALTER TABLE users ADD COLUMN notify_target BOOLEAN DEFAULT 1"))
+        if "check_interval_minutes" not in user_columns:
+            sync_conn.execute(text("ALTER TABLE users ADD COLUMN check_interval_minutes INTEGER DEFAULT 15"))
+        if "notify_daily_digest" not in user_columns:
+            sync_conn.execute(text("ALTER TABLE users ADD COLUMN notify_daily_digest BOOLEAN DEFAULT 0"))
+
+    if "alert_logs" in inspector.get_table_names():
+        alert_columns = {c["name"] for c in inspector.get_columns("alert_logs")}
+        if "is_read" not in alert_columns:
+            sync_conn.execute(text("ALTER TABLE alert_logs ADD COLUMN is_read BOOLEAN DEFAULT 0"))
+
 
 async def init_db() -> None:
     """Create all tables and apply lightweight schema migrations."""

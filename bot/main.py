@@ -7,6 +7,7 @@ middlewares, the APScheduler price-check job, and the FastAPI Mini App.
 from __future__ import annotations
 
 import asyncio
+import os
 
 import uvicorn
 from aiogram import Bot, Dispatcher
@@ -15,6 +16,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import MenuButtonWebApp, WebAppInfo
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
 from loguru import logger
 
 from bot.handlers import start
@@ -24,7 +26,7 @@ from bot.session import create_bot_session
 from config.settings import settings
 from db.database import dispose_db, init_db
 from parser.http import close_cffi_session, close_http_client
-from scheduler.jobs import check_prices
+from scheduler.jobs import check_prices, send_daily_digests
 from utils.logger import setup_logger
 from web.api import app as web_app
 
@@ -70,21 +72,52 @@ async def main() -> None:
     scheduler.add_job(
         check_prices,
         trigger="interval",
-        minutes=settings.scheduler_interval_minutes,
+        minutes=5,  # минимальный «тик»; фактическая проверка — по частоте пользователя
         args=[bot],
         id="check_prices",
         name="Price check",
         coalesce=True,
         max_instances=1,
     )
-    scheduler.start()
-    logger.info("Scheduler started (every {} min).", settings.scheduler_interval_minutes)
+    scheduler.add_job(
+        send_daily_digests,
+        trigger=CronTrigger(hour=9, minute=0, timezone="Europe/Moscow"),
+        args=[bot],
+        id="daily_digest",
+        name="Daily digest",
+        coalesce=True,
+        max_instances=1,
+    )
+    if settings.keep_alive and settings.webapp_url:
+        import httpx
 
+        async def _keep_alive_ping() -> None:
+            try:
+                async with httpx.AsyncClient(timeout=10.0) as client:
+                    await client.get(f"{settings.webapp_url}/healthz")
+            except Exception as exc:  # noqa: BLE001
+                logger.debug("keep-alive ping failed: {}", exc)
+
+        scheduler.add_job(
+            _keep_alive_ping,
+            trigger="interval",
+            minutes=5,
+            id="keep_alive",
+            name="Keep-alive ping",
+            coalesce=True,
+            max_instances=1,
+        )
+        logger.info("Keep-alive enabled (ping {}/healthz every 5 min).", settings.webapp_url)
+
+    scheduler.start()
+    logger.info("Scheduler started (tick every 5 min).")
+
+    web_port = int(os.environ.get("PORT", settings.webapp_port))
     web_server = uvicorn.Server(
         uvicorn.Config(
             web_app,
             host=settings.webapp_host,
-            port=settings.webapp_port,
+            port=web_port,
             log_level="warning",
         )
     )

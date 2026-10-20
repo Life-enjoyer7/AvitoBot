@@ -1,0 +1,39 @@
+# Render Blueprint — деплой MarketTracker (бот + Telegram Mini App)
+#
+# Как деплоить:
+#   1. git push origin main
+#   2. Render → New → Blueprint → выбрать репозиторий
+#   3. В дашборде задать секрет (Environment): BOT_TOKEN
+#
+# PostgreSQL создаётся автоматически ниже; строка подключения пробрасывается
+# в переменную DATABASE_URL, которую приложение само переводит в asyncpg.
+
+services:
+  - type: web
+    name: markettracker
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m bot.main
+    envVars:
+      - key: WEBAPP_HOST
+        value: 0.0.0.0
+      - key: WEBAPP_DEV_MODE
+        value: "false"
+      - key: KEEP_ALIVE
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: markettracker-db
+          property: connectionString
+      # Секретные переменные — задайте их в дашборде Render
+      # (Environment → Add Environment Variable), НЕ коммитьте в git:
+      #   BOT_TOKEN            — токен бота от @BotFather
+      #
+      # WEBAPP_URL задавать не нужно: приложение само берёт RENDER_EXTERNAL_URL.
+
+databases:
+  - name: markettracker-db
+    plan: free
+    databaseName: markettracker
+    user: markettracker

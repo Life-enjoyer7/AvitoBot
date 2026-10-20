@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 
 from config.settings import settings
 from db.database import async_session_factory, init_db
-from db.repositories import history_repo, track_repo, user_repo
+from db.repositories import alert_repo, history_repo, track_repo, user_repo
 from parser.parser_factory import ParserFactory
 from utils.url_validator import (
     UnsupportedMarketplaceError,
@@ -57,6 +57,11 @@ async def index() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html")
 
 
+@app.get("/healthz")
+async def healthz() -> dict:
+    return {"status": "ok"}
+
+
 async def _get_user_id(session, telegram_id: int) -> int:
     user = await user_repo.get_or_create_user(session, telegram_id=telegram_id)
     await session.flush()
@@ -90,8 +95,10 @@ def _track_payload(track, change_7d: float | None, history: list[float]) -> dict
 @app.get("/api/me")
 async def me(tg_id: int = Depends(current_telegram_id)) -> dict:
     async with async_session_factory() as session:
-        user_id = await _get_user_id(session, tg_id)
-        tracks = await track_repo.list_tracks(session, user_id, active_only=True)
+        user = await user_repo.get_or_create_user(session, telegram_id=tg_id)
+        await session.flush()
+        tracks = await track_repo.list_tracks(session, user.id, active_only=True)
+        alerts_count = await alert_repo.count_unread_alerts(session, user.id)
         await session.commit()
 
     last_check = max(
@@ -99,8 +106,16 @@ async def me(tg_id: int = Depends(current_telegram_id)) -> dict:
     )
     return {
         "telegram_id": tg_id,
+        "username": user.username,
         "track_count": len(tracks),
+        "alerts_count": alerts_count,
         "last_check": last_check.isoformat() if last_check else None,
+        "notify_drop": bool(user.notify_drop),
+        "notify_rise": bool(user.notify_rise),
+        "notify_target": bool(user.notify_target),
+        "notify_daily_digest": bool(user.notify_daily_digest),
+        "check_interval_minutes": user.check_interval_minutes,
+        "is_premium": bool(user.is_premium),
     }
 
 
@@ -166,19 +181,51 @@ async def add_track(body: dict, tg_id: int = Depends(current_telegram_id)) -> di
     }
 
 
+@app.get("/api/alerts")
+async def alerts(tg_id: int = Depends(current_telegram_id)) -> list[dict]:
+    async with async_session_factory() as session:
+        user_id = await _get_user_id(session, tg_id)
+        rows = await alert_repo.list_alerts_for_user(session, user_id, limit=30)
+        await session.commit()
+
+    return [
+        {
+            "id": alert.id,
+            "track_id": alert.track_id,
+            "title": title,
+            "alert_type": alert.alert_type.value,
+            "old_price": alert.old_price,
+            "new_price": alert.new_price,
+            "sent_at": alert.sent_at.isoformat(),
+        }
+        for alert, title in rows
+    ]
+
+
 @app.get("/api/tracks/{track_id}/history")
-async def history(track_id: int, tg_id: int = Depends(current_telegram_id)) -> list[dict]:
+async def history(track_id: int, days: int = 30, tg_id: int = Depends(current_telegram_id)) -> list[dict]:
     async with async_session_factory() as session:
         user_id = await _get_user_id(session, tg_id)
         track = await track_repo.get_track(session, track_id, user_id=user_id)
         if track is None:
             raise HTTPException(status_code=404, detail="Track not found")
-        items = await history_repo.get_history(session, track_id, limit=30)
+        items = await history_repo.get_history_since(session, track_id, days=days)
+        if not items:
+            items = await history_repo.get_history(session, track_id, limit=30)
         await session.commit()
     return [
         {"price": item.price, "timestamp": item.timestamp.isoformat()}
         for item in items
     ]
+
+
+@app.post("/api/alerts/read-all")
+async def read_all_alerts(tg_id: int = Depends(current_telegram_id)) -> dict:
+    async with async_session_factory() as session:
+        user_id = await _get_user_id(session, tg_id)
+        await alert_repo.mark_all_read(session, user_id)
+        await session.commit()
+    return {"ok": True}
 
 
 @app.patch("/api/tracks/{track_id}")
@@ -227,3 +274,25 @@ async def delete_track(track_id: int, tg_id: int = Depends(current_telegram_id))
         await session.delete(track)
         await session.commit()
     return {"ok": True}
+
+
+@app.patch("/api/settings")
+async def patch_settings(body: dict, tg_id: int = Depends(current_telegram_id)) -> dict:
+    async with async_session_factory() as session:
+        user = await user_repo.get_or_create_user(session, telegram_id=tg_id)
+        if "notify_drop" in body:
+            user.notify_drop = bool(body["notify_drop"])
+        if "notify_rise" in body:
+            user.notify_rise = bool(body["notify_rise"])
+        if "notify_target" in body:
+            user.notify_target = bool(body["notify_target"])
+        if "check_interval_minutes" in body:
+            value = int(body["check_interval_minutes"])
+            if value not in (5, 10, 15, 20, 30):
+                raise HTTPException(status_code=400, detail="Допустимая частота: 5, 10, 15, 20, 30 минут")
+            user.check_interval_minutes = value
+        if "notify_daily_digest" in body:
+            user.notify_daily_digest = bool(body["notify_daily_digest"])
+        await session.commit()
+    return {"ok": True}
+

@@ -33,6 +33,20 @@ async def get_history(
     return list(reversed(result.scalars().all()))
 
 
+async def get_history_since(
+    session: AsyncSession, track_id: int, days: int
+) -> list[PriceHistory]:
+    """Return all observations within the last `days` days, chronological."""
+    since = datetime.now() - timedelta(days=days)
+    stmt = (
+        select(PriceHistory)
+        .where(PriceHistory.track_id == track_id, PriceHistory.timestamp >= since)
+        .order_by(PriceHistory.timestamp.asc(), PriceHistory.id.asc())
+    )
+    result = await session.execute(stmt)
+    return list(result.scalars().all())
+
+
 async def get_first_price_since(
     session: AsyncSession, track_id: int, days: int = 7
 ) -> float | None:

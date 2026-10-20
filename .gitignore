@@ -35,3 +35,6 @@ Thumbs.db
 # --- Local tooling ---
 cloudflared
 ngrok
+
+# --- Logs (runtime) ---
+*.log

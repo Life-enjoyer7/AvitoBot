@@ -9,26 +9,38 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.settings import settings
-from core.tracker_service import build_alert_message, detect_alert
+from core.tracker_service import build_alert_message, detect_alert, user_wants_alert
 from db.database import async_session_factory
 from db.enums import AlertType
 from db.models import Track
-from db.repositories import alert_repo, history_repo, track_repo
+from db.repositories import alert_repo, history_repo, track_repo, user_repo
 from parser.parser_factory import ParserFactory
+from utils.formatting import format_price
 
 
 async def check_prices(bot: Bot) -> None:
-    """Check every active track once (runs on the APScheduler interval)."""
+    """Check active tracks that are due (the job ticks every 5 minutes)."""
     async with async_session_factory() as session:
         tracks = await track_repo.get_active_tracks(session)
-        logger.info("Price check started for {} track(s)", len(tracks))
-        for track in tracks:
+        now = datetime.now()
+        due = [t for t in tracks if _is_due(t, now)]
+        logger.info("Price check: {} active, {} due", len(tracks), len(due))
+        for track in due:
             try:
                 await process_track(session, bot, track)
                 await session.commit()
             except Exception as exc:  # noqa: BLE001 — one bad track must not kill the job
                 await session.rollback()
                 logger.error("Track #{} check failed: {}", track.id, exc)
+
+
+def _is_due(track: Track, now: datetime) -> bool:
+    """True if enough time passed since the last check (per-user interval)."""
+    if track.last_checked_at is None:
+        return True
+    interval = getattr(track.user, "check_interval_minutes", 15) or 15
+    elapsed = (now - track.last_checked_at).total_seconds()
+    return elapsed >= interval * 60
 
 
 async def process_track(session: AsyncSession, bot: Bot, track: Track) -> None:
@@ -56,7 +68,7 @@ async def process_track(session: AsyncSession, bot: Bot, track: Track) -> None:
     if track.image_url is None and listing.image_url:
         track.image_url = listing.image_url
 
-    if alert_type is not None:
+    if alert_type is not None and user_wants_alert(track.user, alert_type):
         recently_sent = await alert_repo.has_recent_alert(
             session, track.id, alert_type, settings.alert_cooldown_hours
         )
@@ -93,3 +105,29 @@ async def _send_alert(
         )
     except Exception as exc:  # noqa: BLE001
         logger.error("Failed to send {} alert for track #{}: {}", alert_type, track.id, exc)
+
+
+async def send_daily_digests(bot: Bot) -> None:
+    """Send a daily price summary to users who enabled it."""
+    async with async_session_factory() as session:
+        users = await user_repo.get_digest_users(session)
+        for user in users:
+            tracks = await track_repo.list_tracks(session, user.id, active_only=True)
+            if not tracks:
+                continue
+            lines = []
+            for track in tracks:
+                first = await history_repo.get_first_price_since(session, track.id, days=1)
+                change = ""
+                if first and track.current_price:
+                    chg = (track.current_price - first) / first * 100.0
+                    change = ("📉" if chg < 0 else "📈") + f" {chg:+.1f}%"
+                lines.append(
+                    f"• <b>{track.title[:50]}</b> — {format_price(track.current_price)} {change}"
+                )
+            text = "📊 <b>Ежедневная сводка</b>\n\n" + "\n".join(lines)
+            try:
+                await bot.send_message(user.telegram_id, text)
+            except Exception as exc:  # noqa: BLE001
+                logger.error("Failed to send daily digest to {}: {}", user.telegram_id, exc)
+        await session.commit()
