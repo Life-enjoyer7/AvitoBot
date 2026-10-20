@@ -34,3 +34,4 @@ Thumbs.db
 
 # --- Local tooling ---
 cloudflared
+ngrok
