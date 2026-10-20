@@ -18,6 +18,7 @@ from loguru import logger
 from bot.handlers import callbacks, commands, menu, start, track
 from bot.middlewares.errors import register_error_handlers
 from bot.middlewares.throttling import ThrottlingMiddleware
+from bot.session import create_bot_session
 from config.settings import settings
 from db.database import dispose_db, init_db
 from parser.http import close_cffi_session, close_http_client
@@ -41,6 +42,7 @@ async def main() -> None:
 
     bot = Bot(
         token=settings.bot_token,
+        session=create_bot_session(),
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
     dp = Dispatcher(storage=MemoryStorage())

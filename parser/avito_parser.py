@@ -2,9 +2,10 @@
 
 Data sources, tried in order (never raises):
   1. Mobile API  — m.avito.ru/api/1/card/items/{id}. Returns real JSON card
-     data. Requires a browser-like TLS fingerprint (Avito blocks httpx/aiohttp),
-     so it uses curl_cffi with `impersonate="chrome"`. Requests are throttled
-     and rate-limit errors are retried with backoff.
+     data (title, price, image). Requires a browser-like TLS fingerprint
+     (Avito blocks httpx/aiohttp), so it uses curl_cffi with
+     `impersonate="chrome"`. Requests are throttled and rate-limit errors
+     are retried with backoff.
   2. HTML page   — JSON-LD / OpenGraph / microdata (fallback).
   3. Mock data   — deterministic demo data as a last resort.
 """
@@ -73,16 +74,21 @@ class AvitoParser(BaseParser):
     async def parse_listing(self, url: str) -> ListingData:
         item_id = self._extract_item_id(url)
         if item_id:
-            title, price = await self._fetch_mobile_api(item_id)
+            title, price, image = await self._fetch_mobile_api(item_id)
             if title:
                 logger.info("Avito card {} fetched via mobile API", item_id)
                 return ListingData(
-                    marketplace=self.marketplace, title=title, price=price
+                    marketplace=self.marketplace,
+                    title=title,
+                    price=price,
+                    image_url=image,
                 )
 
         return await self._parse_html(url)
 
-    async def _fetch_mobile_api(self, item_id: str) -> tuple[str | None, float | None]:
+    async def _fetch_mobile_api(
+        self, item_id: str
+    ) -> tuple[str | None, float | None, str | None]:
         session = get_cffi_session()
         url = self._ITEM_API_URL.format(item_id=item_id)
 
@@ -102,13 +108,13 @@ class AvitoParser(BaseParser):
                     data = response.json()
                 except Exception as exc:  # noqa: BLE001
                     logger.warning("Avito mobile API bad JSON: {}", exc)
-                    return None, None
+                    return None, None, None
                 mobile = _get_path(data, "success", "mobile") or {}
                 if isinstance(mobile, dict):
                     title = mobile.get("title")
                     if title:
-                        return title, self._extract_price(mobile)
-                return None, None
+                        return title, self._extract_price(mobile), self._extract_image(mobile)
+                return None, None, None
 
             if response.status_code in (403, 429):
                 logger.warning(
@@ -118,17 +124,15 @@ class AvitoParser(BaseParser):
                 await asyncio.sleep(_RATE_LIMIT_BACKOFF)
                 continue
 
-            # 404 / other — the card is gone or an unexpected code.
-            return None, None
+            return None, None, None
 
-        return None, None
+        return None, None, None
 
     @staticmethod
     def _extract_price(mobile: dict) -> float | None:
         price_node = mobile.get("price")
         if not isinstance(price_node, dict):
             return None
-        # Most stable field: mobile.price.value = "62 990"
         raw = price_node.get("value") or price_node.get("value_signed")
         price = extract.parse_price(str(raw)) if raw else None
         if price is None:
@@ -137,6 +141,23 @@ class AvitoParser(BaseParser):
             )
             price = extract.parse_price(str(text)) if text else None
         return price
+
+    @staticmethod
+    def _extract_image(mobile: dict) -> str | None:
+        images = mobile.get("images")
+        if isinstance(images, list) and images:
+            first = images[0]
+            if isinstance(first, dict):
+                for key in ("url", "uri", "orig", "640x480", "480x360", "src"):
+                    value = first.get(key)
+                    if isinstance(value, str) and value.startswith("http"):
+                        return value
+                for value in first.values():
+                    if isinstance(value, str) and value.startswith("http"):
+                        return value
+            elif isinstance(first, str) and first.startswith("http"):
+                return first
+        return None
 
     async def _parse_html(self, url: str) -> ListingData:
         client = get_http_client()
@@ -158,7 +179,12 @@ class AvitoParser(BaseParser):
             title = title or m_title
             price = price if price is not None else m_price
         title = title or mock_data.mock_title(self.marketplace, url)
-        return ListingData(marketplace=self.marketplace, title=title, price=price)
+        return ListingData(
+            marketplace=self.marketplace,
+            title=title,
+            price=price,
+            image_url=extract.json_ld_image(html),
+        )
 
     def _mock(self, url: str) -> ListingData:
         return ListingData(

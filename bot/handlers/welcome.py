@@ -21,8 +21,8 @@ def _fmt_time(dt: datetime | None) -> str:
     return dt.strftime("%H:%M") if dt else "—"
 
 
-async def build_welcome_text(session: AsyncSession, user_id: int) -> str:
-    """Build the rich /start message for a user."""
+async def build_welcome(session: AsyncSession, user_id: int) -> tuple[str, str | None]:
+    """Build the rich /start message and the latest track image (if any)."""
     tracks = await track_repo.list_tracks(session, user_id, active_only=True)
 
     lines = [_INTRO, ""]
@@ -34,8 +34,10 @@ async def build_welcome_text(session: AsyncSession, user_id: int) -> str:
     if last_check:
         lines.append(f"🕒 Последняя проверка: <b>{_fmt_time(last_check)}</b>")
 
+    image_url: str | None = None
     if tracks:
         track = tracks[-1]
+        image_url = track.image_url
         lines += ["", f"<b>{track.title[:70]}</b>"]
         row = f"🏪 {track.marketplace.value} · 💰 {format_price(track.current_price)}"
         if track.target_price is not None:
@@ -49,4 +51,4 @@ async def build_welcome_text(session: AsyncSession, user_id: int) -> str:
             lines.append(f"{arrow} {change:+.1f}% за 7 дней")
 
     lines += ["", "Пришлите ссылку на объявление или нажмите «➕ Добавить товар»."]
-    return "\n".join(lines)
+    return "\n".join(lines), image_url

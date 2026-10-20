@@ -6,7 +6,7 @@ from aiogram import Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
 
-from bot.handlers.welcome import build_welcome_text
+from bot.handlers.welcome import build_welcome
 from bot.keyboards.reply import main_menu_kb
 from db.database import async_session_factory
 from db.repositories import user_repo
@@ -27,6 +27,8 @@ HELP_TEXT = (
     "❓ Помощь — эта справка"
 )
 
+_CAPTION_LIMIT = 1024
+
 
 @router.message(CommandStart())
 async def cmd_start(message: Message) -> None:
@@ -38,8 +40,20 @@ async def cmd_start(message: Message) -> None:
             is_premium=bool(getattr(message.from_user, "is_premium", False)),
         )
         await session.flush()
-        text = await build_welcome_text(session, user.id)
+        text, image_url = await build_welcome(session, user.id)
         await session.commit()
+
+    if image_url:
+        try:
+            await message.answer_photo(
+                image_url,
+                caption=text[:_CAPTION_LIMIT],
+                reply_markup=main_menu_kb(),
+            )
+            return
+        except Exception:  # noqa: BLE001 — fall back to a text message
+            pass
+
     await message.answer(text, reply_markup=main_menu_kb())
 
 

@@ -19,6 +19,7 @@ class ListingData:
     marketplace: Marketplace
     title: str
     price: float | None
+    image_url: str | None = None
     estimated: bool = False
 
 

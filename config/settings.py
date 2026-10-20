@@ -69,6 +69,13 @@ class Settings(BaseSettings):
             "Required to bypass marketplace IP blocks from datacenter servers."
         ),
     )
+    telegram_proxy_url: str | None = Field(
+        default=None,
+        description=(
+            "Proxy for the Telegram API (http://... or socks5://...). "
+            "Needed when api.telegram.org is blocked/throttled by the ISP."
+        ),
+    )
 
     # --- Logging ---
     log_level: str = Field(default="INFO", description="Minimum console log level")

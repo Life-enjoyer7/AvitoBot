@@ -59,6 +59,7 @@ async def cb_save(cb: CallbackQuery, state: FSMContext) -> None:
             url=data["url"],
             title=data["title"],
             current_price=data["current_price"],
+            image_url=data.get("image_url"),
             alert_drop_percent=data.get("drop_percent"),
             alert_rise_percent=data.get("rise_percent"),
             target_price=data.get("target_price"),

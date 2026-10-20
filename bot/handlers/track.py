@@ -77,6 +77,7 @@ async def on_url(message: Message, state: FSMContext) -> None:
         "marketplace": marketplace.value,
         "title": listing.title or "Без названия",
         "current_price": listing.price,
+        "image_url": listing.image_url,
         "target_price": None,
         "drop_percent": 5.0,
         "rise_percent": None,

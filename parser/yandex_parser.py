@@ -41,7 +41,12 @@ class YandexParser(BaseParser):
             price = price if price is not None else m_price
 
         if title and price is not None:
-            return ListingData(marketplace=self.marketplace, title=title, price=price)
+            return ListingData(
+                marketplace=self.marketplace,
+                title=title,
+                price=price,
+                image_url=extract.json_ld_image(response.text),
+            )
 
         return self._mock(url)
 

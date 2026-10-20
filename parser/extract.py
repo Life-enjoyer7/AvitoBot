@@ -49,6 +49,19 @@ def _find_first_key(value: Any, key: str) -> Any:
     return None
 
 
+def json_ld_image(html: str) -> str | None:
+    """Return the first product image URL from JSON-LD blocks."""
+    for data in _load_json_ld(html):
+        image = _find_first_key(data, "image")
+        if isinstance(image, str) and image.startswith("http"):
+            return image
+        if isinstance(image, list) and image:
+            first = image[0]
+            if isinstance(first, str) and first.startswith("http"):
+                return first
+    return None
+
+
 def _load_json_ld(html: str) -> list[Any]:
     soup = BeautifulSoup(html, "lxml")
     result: list[Any] = []

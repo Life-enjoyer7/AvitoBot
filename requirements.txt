@@ -2,6 +2,8 @@
 
 # --- Telegram Bot Framework ---
 aiogram>=3.7,<4.0
+# optional: proxy support for the Telegram API (TELEGRAM_PROXY_URL)
+aiohttp-socks>=0.8,<1.0
 
 # --- Database (async) ---
 # [asyncio] extra pulls in greenlet, required by SQLAlchemy async engine

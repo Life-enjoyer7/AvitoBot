@@ -52,6 +52,7 @@ class Track(Base):
     )
     url: Mapped[str] = mapped_column(String(2048), nullable=False)
     title: Mapped[str] = mapped_column(String(512), nullable=False)
+    image_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     current_price: Mapped[float | None] = mapped_column(Float, nullable=True)
     # Price observed on the previous check; used to compute drop/rise percent.
     last_checked_price: Mapped[float | None] = mapped_column(Float, nullable=True)
