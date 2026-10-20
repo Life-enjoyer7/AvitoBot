@@ -53,6 +53,8 @@ async def process_track(session: AsyncSession, bot: Bot, track: Track) -> None:
     track.current_price = new_price
     track.last_checked_price = new_price
     track.last_checked_at = datetime.now()
+    if track.image_url is None and listing.image_url:
+        track.image_url = listing.image_url
 
     if alert_type is not None:
         recently_sent = await alert_repo.has_recent_alert(

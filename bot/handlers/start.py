@@ -1,62 +1,69 @@
-"""/start and /help handlers."""
+"""/start and /help handlers.
+
+The bot itself is now only a notification service: it sends price alerts.
+All product management (add/list/edit/delete) lives in the Mini App.
+"""
 
 from __future__ import annotations
 
 from aiogram import Router
 from aiogram.filters import Command, CommandStart
-from aiogram.types import Message
+from aiogram.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+    WebAppInfo,
+)
 
-from bot.handlers.welcome import build_welcome
-from bot.keyboards.reply import main_menu_kb
+from config.settings import settings
 from db.database import async_session_factory
 from db.repositories import user_repo
 
 router = Router(name="start")
 
-HELP_TEXT = (
-    "📖 <b>Как пользоваться</b>\n\n"
-    "1. Отправьте ссылку на товар (Авито, Яндекс Маркет, Ozon, WB, Auto.ru).\n"
-    "2. Настройте условия: целевую цену, порог падения (%) или порог роста (%).\n"
-    "3. Нажмите «Сохранить».\n\n"
-    "Я проверяю цены каждые 15 минут и пришлю уведомление при срабатывании "
-    "условия (не чаще одного раза в сутки по одному условию).\n\n"
-    "<b>Кнопки меню:</b>\n"
-    "➕ Добавить товар — начать отслеживание\n"
-    "📊 Мои товары — список треков\n"
-    "⚙️ Настройки — условия алертов\n"
-    "❓ Помощь — эта справка"
+START_TEXT = (
+    "🛒 <b>MarketTracker</b>\n\n"
+    "Я слежу за ценами на ваши товары и присылаю уведомления, когда цена "
+    "падает, растёт или достигает цели.\n\n"
+    "Управление товарами — в приложении:"
 )
 
-_CAPTION_LIMIT = 1024
+HELP_TEXT = (
+    "📖 <b>MarketTracker</b>\n\n"
+    "Бот присылает уведомления об изменении цен. Добавление, настройка "
+    "условий и удаление товаров — в приложении.\n\n"
+    "Откройте приложение через кнопку меню (☰) или кнопку ниже."
+)
+
+
+def _app_keyboard() -> InlineKeyboardMarkup | None:
+    if settings.webapp_url:
+        return InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text="🌐 Открыть приложение",
+                        web_app=WebAppInfo(url=settings.webapp_url),
+                    )
+                ]
+            ]
+        )
+    return None
 
 
 @router.message(CommandStart())
 async def cmd_start(message: Message) -> None:
     async with async_session_factory() as session:
-        user = await user_repo.get_or_create_user(
+        await user_repo.get_or_create_user(
             session,
             telegram_id=message.from_user.id,
             username=message.from_user.username,
             is_premium=bool(getattr(message.from_user, "is_premium", False)),
         )
-        await session.flush()
-        text, image_url = await build_welcome(session, user.id)
         await session.commit()
-
-    if image_url:
-        try:
-            await message.answer_photo(
-                image_url,
-                caption=text[:_CAPTION_LIMIT],
-                reply_markup=main_menu_kb(),
-            )
-            return
-        except Exception:  # noqa: BLE001 — fall back to a text message
-            pass
-
-    await message.answer(text, reply_markup=main_menu_kb())
+    await message.answer(START_TEXT, reply_markup=_app_keyboard())
 
 
 @router.message(Command("help"))
 async def cmd_help(message: Message) -> None:
-    await message.answer(HELP_TEXT, reply_markup=main_menu_kb())
+    await message.answer(HELP_TEXT, reply_markup=_app_keyboard())

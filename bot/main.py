@@ -17,7 +17,7 @@ from aiogram.types import MenuButtonWebApp, WebAppInfo
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from loguru import logger
 
-from bot.handlers import callbacks, commands, menu, start, track
+from bot.handlers import start
 from bot.middlewares.errors import register_error_handlers
 from bot.middlewares.throttling import ThrottlingMiddleware
 from bot.session import create_bot_session
@@ -65,10 +65,6 @@ async def main() -> None:
     register_error_handlers(dp)
 
     dp.include_router(start.router)
-    dp.include_router(menu.router)
-    dp.include_router(track.router)
-    dp.include_router(commands.router)
-    dp.include_router(callbacks.router)
 
     scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
     scheduler.add_job(
