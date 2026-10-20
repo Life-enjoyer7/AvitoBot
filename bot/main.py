@@ -28,6 +28,7 @@ from db.database import dispose_db, init_db
 from parser.http import close_cffi_session, close_http_client
 from scheduler.jobs import check_prices, send_daily_digests
 from utils.logger import setup_logger
+from utils.proxy_debug import mask_proxy, probe_proxy
 from web.api import app as web_app
 
 
@@ -44,6 +45,19 @@ async def main() -> None:
 
     await init_db()
     logger.info("Database initialized.")
+
+    # --- Парсер-прокси: показать конфиг и проверить доступность ---
+    logger.info("Parser proxy: {}", mask_proxy(settings.parser_proxy_url))
+    proxy_info = await probe_proxy(settings.parser_proxy_url)
+    if proxy_info.get("ok"):
+        logger.info(
+            "Proxy check OK: egress IP {} ({}, {})",
+            proxy_info.get("ip"),
+            proxy_info.get("city"),
+            proxy_info.get("country"),
+        )
+    else:
+        logger.warning("Proxy check FAILED: {}", proxy_info.get("error"))
 
     bot = Bot(
         token=settings.bot_token,

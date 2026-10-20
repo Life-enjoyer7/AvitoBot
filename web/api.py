@@ -63,6 +63,15 @@ async def healthz() -> dict:
     return {"status": "ok"}
 
 
+@app.get("/debug/proxy")
+async def debug_proxy() -> dict:
+    """Diagnostic: show masked proxy config and test it (egress IP)."""
+    from utils.proxy_debug import mask_proxy, probe_proxy
+
+    info = await probe_proxy(settings.parser_proxy_url)
+    return {"proxy": mask_proxy(settings.parser_proxy_url), **info}
+
+
 async def _get_user_id(session, telegram_id: int) -> int:
     user = await user_repo.get_or_create_user(session, telegram_id=telegram_id)
     await session.flush()

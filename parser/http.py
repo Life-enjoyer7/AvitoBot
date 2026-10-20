@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import httpx
 from curl_cffi.requests import AsyncSession
+from loguru import logger
 
 from config.settings import settings
+from utils.proxy_debug import mask_proxy
 
 _client: httpx.AsyncClient | None = None
 _cffi_session: AsyncSession | None = None
@@ -55,6 +57,11 @@ def get_cffi_session() -> AsyncSession:
                 "http": settings.parser_proxy_url,
                 "https": settings.parser_proxy_url,
             }
+            logger.info(
+                "curl_cffi session created WITH proxy {}", mask_proxy(settings.parser_proxy_url)
+            )
+        else:
+            logger.warning("curl_cffi session created WITHOUT proxy (PARSER_PROXY_URL empty)")
         _cffi_session = AsyncSession(impersonate="chrome", proxies=proxies)
     return _cffi_session
 
