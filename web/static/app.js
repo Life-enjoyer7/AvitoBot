@@ -382,14 +382,13 @@ async function markAllRead() {
     await api("/api/alerts/read-all", { method: "POST" });
     renderAlertsBadge(0);
     await loadAlerts();
-    showToast("Все уведомления отмечены прочитанными");
+    showToast("Уведомления очищены");
   } catch (e) { showToast(e.message); }
 }
 
 async function loadAlerts() {
   try {
     const list = await api("/api/alerts");
-    renderAlertsBadge(list.length);
     const box = document.getElementById("alertsList");
     if (!box) return;
     if (!list.length) {

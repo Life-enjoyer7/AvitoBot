@@ -234,7 +234,7 @@ async def history(track_id: int, days: int = 30, tg_id: int = Depends(current_te
 async def read_all_alerts(tg_id: int = Depends(current_telegram_id)) -> dict:
     async with async_session_factory() as session:
         user_id = await _get_user_id(session, tg_id)
-        await alert_repo.mark_all_read(session, user_id)
+        await alert_repo.delete_all_alerts(session, user_id)
         await session.commit()
     return {"ok": True}
 

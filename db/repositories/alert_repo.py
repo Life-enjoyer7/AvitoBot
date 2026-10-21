@@ -70,17 +70,14 @@ async def count_unread_alerts(session: AsyncSession, user_id: int) -> int:
     return result.scalar_one() or 0
 
 
-async def mark_all_read(session: AsyncSession, user_id: int) -> None:
-    from sqlalchemy import update
+async def delete_all_alerts(session: AsyncSession, user_id: int) -> None:
+    """Delete all of the user's alerts (the "clear notifications" button)."""
+    from sqlalchemy import delete
 
-    stmt = (
-        update(AlertLog)
-        .where(
-            AlertLog.track_id.in_(
-                select(Track.id).where(Track.user_id == user_id)
-            )
+    stmt = delete(AlertLog).where(
+        AlertLog.track_id.in_(
+            select(Track.id).where(Track.user_id == user_id)
         )
-        .values(is_read=True)
     )
     await session.execute(stmt)
 
