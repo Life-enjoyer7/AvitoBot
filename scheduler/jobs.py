@@ -58,6 +58,18 @@ async def process_track(session: AsyncSession, bot: Bot, track: Track) -> None:
         await _handle_removed(session, bot, track)
         return
 
+    # Мок/оценочные данные (парсинг заблокирован антиботом) — не перезаписываем
+    # реальную цену фейковой: иначе график и алерты будут «прыгать». Просто
+    # отмечаем проверку и выходим; настоящая цена обновится на следующем цикле,
+    # когда парсер снова получит реальные данные.
+    if listing.estimated:
+        track.last_checked_at = datetime.now()
+        logger.info(
+            "Track #{} ({}) got estimated/mock data — keeping price {}",
+            track.id, (track.title or "")[:40], track.current_price,
+        )
+        return
+
     await history_repo.add_history(session, track.id, new_price)
 
     alert_type = detect_alert(track, new_price)
