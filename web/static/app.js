@@ -312,15 +312,9 @@ async function loadAll() {
   const [me, tracks, alerts] = await Promise.all([api("/api/me"), api("/api/tracks"), api("/api/alerts")]);
   items = tracks.map(mapTrack);
   renderAll();
-  renderAccount(me);
   renderSettings(me);
   renderAlertsBadge(me.alerts_count || 0);
   renderOverviewAside(alerts);
-}
-
-function renderAccount(me) {
-  const plan = document.getElementById("profilePlan");
-  if (plan) plan.textContent = me.is_premium ? "PRO тариф" : "Бесплатный тариф";
 }
 
 function setSwitch(key, on) {

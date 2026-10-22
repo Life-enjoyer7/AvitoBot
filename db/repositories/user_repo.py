@@ -26,7 +26,6 @@ async def get_or_create_user(
     session: AsyncSession,
     telegram_id: int,
     username: str | None = None,
-    is_premium: bool = False,
 ) -> User:
     """Return the user for `telegram_id`, creating it on first contact.
 
@@ -38,7 +37,7 @@ async def get_or_create_user(
     """
     user = await get_user_by_telegram_id(session, telegram_id)
     if user is None:
-        user = User(telegram_id=telegram_id, username=username, is_premium=is_premium)
+        user = User(telegram_id=telegram_id, username=username)
         session.add(user)
         try:
             await session.flush()
@@ -51,5 +50,4 @@ async def get_or_create_user(
 
     if username and user.username != username:
         user.username = username
-    user.is_premium = is_premium
     return user

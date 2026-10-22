@@ -58,7 +58,6 @@ async def cmd_start(message: Message) -> None:
             session,
             telegram_id=message.from_user.id,
             username=message.from_user.username,
-            is_premium=bool(getattr(message.from_user, "is_premium", False)),
         )
         await session.commit()
     await message.answer(START_TEXT, reply_markup=_app_keyboard())

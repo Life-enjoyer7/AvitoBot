@@ -125,7 +125,6 @@ async def me(tg_id: int = Depends(current_telegram_id)) -> dict:
         "notify_target": bool(user.notify_target),
         "notify_daily_digest": bool(user.notify_daily_digest),
         "check_interval_minutes": user.check_interval_minutes,
-        "is_premium": bool(user.is_premium),
     }
 
 
