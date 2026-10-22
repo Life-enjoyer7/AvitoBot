@@ -406,22 +406,6 @@ async function loadAlerts() {
 
 // ---------- History ----------
 function renderHistoryAside() {
-  const box = document.getElementById("historyTopChanges");
-  if (box) {
-    const changed = items
-      .filter(i => i.delta != null && i.delta !== 0)
-      .sort((a, b) => Math.abs(b.change || 0) - Math.abs(a.change || 0))
-      .slice(0, 4);
-    box.innerHTML = changed.length
-      ? changed.map(i => {
-          const up = (i.change || 0) > 0;
-          const amount = Math.abs(Math.round(i.delta));
-          const moneyDelta = amount ? `${up ? "+" : "−"}${amount.toLocaleString("ru-RU")} ₽` : "";
-          return `<div class="alert-item"><div class="alert-avatar ${up ? "amber" : ""}">${icon(up ? "chart" : "arrow-up")}</div><div class="alert-copy"><strong>${escapeHtml(i.name)}</strong><p>${up ? "Рост" : "Снижение"} на ${Math.abs(i.change || 0).toLocaleString("ru-RU", { maximumFractionDigits: 1 })}%</p></div><strong style="color:${up ? "#cc7955" : "#168653"};font-size:11px">${moneyDelta}</strong></div>`;
-        }).join("")
-      : '<div class="empty" style="padding:14px 0;color:#8a978e;font-size:11px">Пока нет изменений цен.</div>';
-  }
-
   const avgEl = document.getElementById("historyAvgChange");
   if (avgEl) {
     const active = items.filter(i => i.active);
@@ -438,7 +422,7 @@ function renderHistory(preferredId = null) {
   sel.innerHTML = items.map(i => `<option value="${i.id}">${escapeHtml(i.name)}</option>`).join("");
   const targetId = preferredId != null ? preferredId : (items[0] ? items[0].id : null);
   const period = document.getElementById("historyPeriod");
-  const days = period ? Number(period.value) : 30;
+  const days = period ? Number(period.value) : 7;
   if (targetId != null) {
     sel.value = String(targetId);
     showHistoryChart(Number(targetId), days);
@@ -446,19 +430,34 @@ function renderHistory(preferredId = null) {
     document.getElementById("historyBig").textContent = "—";
   }
 }
-async function showHistoryChart(id, days = 30) {
+
+async function showHistoryChart(id, days = 7) {
   const i = items.find(x => x.id === id);
   if (!i) return;
-  let hist = [];
-  try { hist = (await api(`/api/tracks/${id}/history?days=${days}`)).map(h => h.price); } catch (e) {}
-  if (!hist.length) hist = i.history || [];
-  if (!hist.length) hist = [i.price];
+  let rows = [];
+  try { rows = await api(`/api/tracks/${id}/history?days=${days}`); } catch (e) {}
+  let hist = rows.map(r => r.price);
+  if (!hist.length) hist = (i.history && i.history.length) ? i.history : [i.price];
   const first = hist[0], last = hist[hist.length - 1];
   const change = first ? ((last - first) / first) * 100 : 0;
   const big = document.getElementById("historyBig");
   if (big) big.textContent = pct(change);
+  renderHistoryTicks(rows);
   const el = document.querySelector("#page-history svg.history-chart");
   if (el) el.outerHTML = priceChart(hist, 700, 280);
+}
+
+function renderHistoryTicks(rows) {
+  const el = document.getElementById("historyTicks");
+  if (!el) return;
+  if (!rows || rows.length === 0) { el.innerHTML = ""; return; }
+  const fmt = ts => {
+    const d = new Date(ts);
+    return isNaN(d) ? "" : d.toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
+  };
+  const n = rows.length;
+  const idxs = [...new Set([0, Math.floor((n - 1) / 3), Math.floor((2 * (n - 1)) / 3), n - 1])];
+  el.innerHTML = idxs.map(idx => `<span>${fmt(rows[idx].timestamp)}</span>`).join("");
 }
 
 // ---------- Overview aside (динамика + последние события) ----------
