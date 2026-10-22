@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 
 from db.database import async_session_factory
 from db.repositories import metric_repo, track_repo, user_repo
@@ -43,7 +43,8 @@ async def cmd_start(message: Message) -> None:
             session, "start", user_id=message.from_user.id
         )
         await session.commit()
-    await message.answer(START_TEXT)
+    # ReplyKeyboardRemove снимает залипшую клавиатуру от старых версий бота.
+    await message.answer(START_TEXT, reply_markup=ReplyKeyboardRemove())
 
 
 @router.callback_query(F.data.startswith("open:"))

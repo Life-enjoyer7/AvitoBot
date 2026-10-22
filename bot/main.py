@@ -14,7 +14,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.types import MenuButtonWebApp, WebAppInfo
+from aiogram.types import BotCommand, MenuButtonWebApp, WebAppInfo
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from loguru import logger
@@ -63,6 +63,15 @@ async def main() -> None:
         token=settings.bot_token,
         session=create_bot_session(),
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+    )
+
+    # Оставляем только /start и /help — иначе в «/»-меню остаются старые
+    # команды от прошлых версий бота.
+    await bot.set_my_commands(
+        [
+            BotCommand(command="start", description="Запустить бота"),
+            BotCommand(command="help", description="Помощь"),
+        ]
     )
 
     if settings.webapp_url:
