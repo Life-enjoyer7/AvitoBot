@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, Header, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from config.settings import settings
@@ -27,6 +27,17 @@ from utils.url_validator import (
 from web.auth import telegram_id_from_init_data
 
 STATIC_DIR = Path(__file__).parent / "static"
+_NO_CACHE = "no-store, no-cache, must-revalidate, max-age=0"
+
+
+class NoCacheStaticFiles(StaticFiles):
+    """StaticFiles that forbids caching — Telegram WebView caches aggressively."""
+
+    async def get_response(self, path: str, scope) -> Response:
+        response = await super().get_response(path, scope)
+        response.headers["Cache-Control"] = _NO_CACHE
+        return response
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
@@ -35,7 +46,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="MarketTracker Mini App", lifespan=lifespan)
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.mount("/static", NoCacheStaticFiles(directory=STATIC_DIR), name="static")
 
 
 def current_telegram_id(
@@ -55,7 +66,7 @@ def current_telegram_id(
 
 @app.get("/")
 async def index() -> FileResponse:
-    return FileResponse(STATIC_DIR / "index.html")
+    return FileResponse(STATIC_DIR / "index.html", headers={"Cache-Control": _NO_CACHE})
 
 
 @app.get("/healthz")
