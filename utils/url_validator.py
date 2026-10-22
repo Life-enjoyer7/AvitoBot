@@ -40,11 +40,13 @@ def normalize_url(raw: str) -> str:
     if parsed.scheme not in ("http", "https") or not parsed.netloc:
         raise ValueError("Некорректная ссылка.")
 
-    # Для Яндекс.Маркета отбрасываем трекинговые query-параметры (sponsored,
-    # cpc, do-waremd5 и т.п.) — карточка работает и без них, а хвост только
-    # мешает и может привести на рекламный вариант страницы.
+    # Отбрасываем трекинговые query-параметры (sponsored, cpc, context и т.п.)
+    # у Яндекс.Маркета и Авито — карточка работает и без них, а длинный хвост
+    # ломает открытие по кнопке в алерте и ведёт на рекламный вариант страницы.
     host = (parsed.hostname or "").lower()
-    if host.endswith("market.yandex.ru") and parsed.query:
+    if parsed.query and (
+        host.endswith("market.yandex.ru") or host.endswith("avito.ru")
+    ):
         text = urlunparse((parsed.scheme, parsed.netloc, parsed.path, "", "", ""))
 
     return text

@@ -9,6 +9,7 @@ from __future__ import annotations
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
+from loguru import logger
 
 from db.database import async_session_factory
 from db.repositories import metric_repo, track_repo, user_repo
@@ -55,21 +56,28 @@ async def on_open_link(callback: CallbackQuery) -> None:
         return
 
     url = None
-    async with async_session_factory() as session:
-        track = await track_repo.get_track(session, track_id)
-        if track is not None:
-            url = track.url
-            await metric_repo.record_event(
-                session,
-                "alert_click",
-                user_id=track.user_id,
-                track_id=track_id,
-                marketplace=track.marketplace.value,
-            )
-            await session.commit()
+    try:
+        async with async_session_factory() as session:
+            track = await track_repo.get_track(session, track_id)
+            if track is not None:
+                url = track.url
+                await metric_repo.record_event(
+                    session,
+                    "alert_click",
+                    user_id=track.user_id,
+                    track_id=track_id,
+                    marketplace=track.marketplace.value,
+                )
+                await session.commit()
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("alert_click handler error: {}", exc)
 
     if url:
-        await callback.answer(url=url)
+        try:
+            await callback.answer(url=url)
+        except Exception:  # noqa: BLE001 — длинный/невалидный URL в answer()
+            await callback.answer()
+            await callback.message.answer(f"🔗 {url}")
     else:
         await callback.answer("Объявление недоступно")
 
