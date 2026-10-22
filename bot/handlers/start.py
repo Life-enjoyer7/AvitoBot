@@ -8,15 +8,8 @@ from __future__ import annotations
 
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
-from aiogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    Message,
-    WebAppInfo,
-)
+from aiogram.types import CallbackQuery, Message
 
-from config.settings import settings
 from db.database import async_session_factory
 from db.repositories import metric_repo, track_repo, user_repo
 
@@ -26,30 +19,16 @@ START_TEXT = (
     "🛒 <b>MarketTracker</b>\n\n"
     "Я слежу за ценами на ваши товары и присылаю уведомления, когда цена "
     "падает, растёт или достигает цели.\n\n"
-    "Управление товарами — в приложении:"
+    "Управление товарами — в приложении: нажмите кнопку меню (☰) и "
+    "«Открыть приложение»."
 )
 
 HELP_TEXT = (
     "📖 <b>MarketTracker</b>\n\n"
     "Бот присылает уведомления об изменении цен. Добавление, настройка "
     "условий и удаление товаров — в приложении.\n\n"
-    "Откройте приложение через кнопку меню (☰) или кнопку ниже."
+    "Откройте приложение через кнопку меню (☰) → «Открыть приложение»."
 )
-
-
-def _app_keyboard() -> InlineKeyboardMarkup | None:
-    if settings.webapp_url:
-        return InlineKeyboardMarkup(
-            inline_keyboard=[
-                [
-                    InlineKeyboardButton(
-                        text="🌐 Открыть приложение",
-                        web_app=WebAppInfo(url=settings.webapp_url),
-                    )
-                ]
-            ]
-        )
-    return None
 
 
 @router.message(CommandStart())
@@ -64,7 +43,7 @@ async def cmd_start(message: Message) -> None:
             session, "start", user_id=message.from_user.id
         )
         await session.commit()
-    await message.answer(START_TEXT, reply_markup=_app_keyboard())
+    await message.answer(START_TEXT)
 
 
 @router.callback_query(F.data.startswith("open:"))
@@ -98,4 +77,4 @@ async def on_open_link(callback: CallbackQuery) -> None:
 
 @router.message(Command("help"))
 async def cmd_help(message: Message) -> None:
-    await message.answer(HELP_TEXT, reply_markup=_app_keyboard())
+    await message.answer(HELP_TEXT)
