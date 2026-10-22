@@ -34,14 +34,12 @@ HELP_TEXT = (
 @router.message(CommandStart())
 async def cmd_start(message: Message) -> None:
     async with async_session_factory() as session:
-        await user_repo.get_or_create_user(
+        user = await user_repo.get_or_create_user(
             session,
             telegram_id=message.from_user.id,
             username=message.from_user.username,
         )
-        await metric_repo.record_event(
-            session, "start", user_id=message.from_user.id
-        )
+        await metric_repo.record_event(session, "start", user_id=user.id)
         await session.commit()
     # ReplyKeyboardRemove снимает залипшую клавиатуру от старых версий бота.
     await message.answer(START_TEXT, reply_markup=ReplyKeyboardRemove())
@@ -64,7 +62,7 @@ async def on_open_link(callback: CallbackQuery) -> None:
             await metric_repo.record_event(
                 session,
                 "alert_click",
-                user_id=callback.from_user.id,
+                user_id=track.user_id,
                 track_id=track_id,
                 marketplace=track.marketplace.value,
             )

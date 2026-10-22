@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from db.enums import AlertType
 from db.models import AlertLog, MetricEvent, Track, User
 
 
@@ -90,12 +91,16 @@ async def compute_metrics(session: AsyncSession) -> dict:
         ),
     )
 
-    # KPI 4 — Alert CTR
+    # KPI 4 — Alert CTR. Кликабельны только DROP/RISE/TARGET (у REMOVED нет
+    # кнопки «Открыть объявление»), поэтому «доставленные» считаем без REMOVED.
     clicks = await _scalar(
         session,
         select(func.count(MetricEvent.id)).where(MetricEvent.event_type == "alert_click"),
     )
-    delivered = await _scalar(session, select(func.count(AlertLog.id)))
+    delivered = await _scalar(
+        session,
+        select(func.count(AlertLog.id)).where(AlertLog.alert_type != AlertType.REMOVED),
+    )
 
     # KPI 5 — Parser success rate
     parse_ok = await _scalar(

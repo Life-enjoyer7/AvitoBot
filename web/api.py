@@ -179,6 +179,12 @@ async def add_track(body: dict, tg_id: int = Depends(current_telegram_id)) -> di
 
     listing = await ParserFactory.get_parser(marketplace).parse_listing(url)
     if listing.price is None:
+        async with async_session_factory() as session:
+            user_id = await _get_user_id(session, tg_id)
+            await metric_repo.record_event(
+                session, "parse_fail", user_id=user_id, marketplace=marketplace.value
+            )
+            await session.commit()
         raise HTTPException(
             status_code=400,
             detail="Не удалось определить цену (объявление удалено или недоступно)",

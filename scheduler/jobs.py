@@ -55,10 +55,12 @@ async def process_track(session: AsyncSession, bot: Bot, track: Track) -> None:
         )
         return  # skip until next cycle
 
-    # Техническая метрика: реальный парсинг vs fallback на мок.
+    # Техническая метрика: успех = реальный HTTP с извлечённой ценой
+    # (мок или «цена не найдена» — это fail).
+    is_ok = (not listing.estimated) and (listing.price is not None)
     await metric_repo.record_event(
         session,
-        "parse_ok" if not listing.estimated else "parse_fail",
+        "parse_ok" if is_ok else "parse_fail",
         user_id=track.user_id,
         marketplace=track.marketplace.value,
     )
