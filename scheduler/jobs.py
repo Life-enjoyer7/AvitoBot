@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from aiogram import Bot
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,7 +14,7 @@ from core.tracker_service import build_alert_message, detect_alert, user_wants_a
 from db.database import async_session_factory
 from db.enums import AlertType
 from db.models import Track
-from db.repositories import alert_repo, history_repo, track_repo, user_repo
+from db.repositories import alert_repo, history_repo, metric_repo, track_repo, user_repo
 from parser.parser_factory import ParserFactory
 from utils.formatting import format_price
 
@@ -49,7 +50,18 @@ async def process_track(session: AsyncSession, bot: Bot, track: Track) -> None:
         listing = await parser.parse_listing(track.url)
     except Exception as exc:  # noqa: BLE001 — parsers already swallow, this is a guard
         logger.error("Parser failed for track #{}: {}", track.id, exc)
+        await metric_repo.record_event(
+            session, "parse_fail", user_id=track.user_id, marketplace=track.marketplace.value
+        )
         return  # skip until next cycle
+
+    # Техническая метрика: реальный парсинг vs fallback на мок.
+    await metric_repo.record_event(
+        session,
+        "parse_ok" if not listing.estimated else "parse_fail",
+        user_id=track.user_id,
+        marketplace=track.marketplace.value,
+    )
 
     new_price = listing.price
     old_price = track.last_checked_price
@@ -110,10 +122,24 @@ async def _send_alert(
     old_price: float | None,
     new_price: float | None,
 ) -> None:
+    # Кнопка «Открыть объявление» — для CTR-метрики (кроме снятых объявлений).
+    reply_markup = None
+    if alert_type is not AlertType.REMOVED:
+        reply_markup = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text="🔗 Открыть объявление",
+                        callback_data=f"open:{track.id}",
+                    )
+                ]
+            ]
+        )
     try:
         await bot.send_message(
             track.user.telegram_id,
             build_alert_message(track, alert_type, old_price, new_price),
+            reply_markup=reply_markup,
         )
     except Exception as exc:  # noqa: BLE001
         logger.error("Failed to send {} alert for track #{}: {}", alert_type, track.id, exc)

@@ -6,9 +6,10 @@ All product management (add/list/edit/delete) lives in the Mini App.
 
 from __future__ import annotations
 
-from aiogram import Router
+from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import (
+    CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     Message,
@@ -17,7 +18,7 @@ from aiogram.types import (
 
 from config.settings import settings
 from db.database import async_session_factory
-from db.repositories import user_repo
+from db.repositories import metric_repo, track_repo, user_repo
 
 router = Router(name="start")
 
@@ -59,8 +60,40 @@ async def cmd_start(message: Message) -> None:
             telegram_id=message.from_user.id,
             username=message.from_user.username,
         )
+        await metric_repo.record_event(
+            session, "start", user_id=message.from_user.id
+        )
         await session.commit()
     await message.answer(START_TEXT, reply_markup=_app_keyboard())
+
+
+@router.callback_query(F.data.startswith("open:"))
+async def on_open_link(callback: CallbackQuery) -> None:
+    """Inline "Открыть объявление" in an alert — track the click (CTR)."""
+    try:
+        track_id = int(callback.data.split(":", 1)[1])
+    except ValueError:
+        await callback.answer()
+        return
+
+    url = None
+    async with async_session_factory() as session:
+        track = await track_repo.get_track(session, track_id)
+        if track is not None:
+            url = track.url
+            await metric_repo.record_event(
+                session,
+                "alert_click",
+                user_id=callback.from_user.id,
+                track_id=track_id,
+                marketplace=track.marketplace.value,
+            )
+            await session.commit()
+
+    if url:
+        await callback.answer(url=url)
+    else:
+        await callback.answer("Объявление недоступно")
 
 
 @router.message(Command("help"))

@@ -77,7 +77,7 @@ def build_alert_message(
             "Отслеживание остановлено."
         )
 
-    return f"{header}{body}\n\n🔗 {track.url}"
+    return f"{header}{body}"
 
 
 def _percent_change(old: float | None, new: float | None) -> str:

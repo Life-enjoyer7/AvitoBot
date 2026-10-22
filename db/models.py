@@ -118,3 +118,22 @@ class AlertLog(Base):
     is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     track: Mapped[Track] = relationship(back_populates="alerts")
+
+
+class MetricEvent(Base):
+    """A discrete product-metrics event (activation/engagement/value/tech KPIs)."""
+
+    __tablename__ = "metric_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=True, index=True
+    )
+    track_id: Mapped[int | None] = mapped_column(
+        ForeignKey("tracks.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    event_type: Mapped[str] = mapped_column(String(32), index=True, nullable=False)
+    marketplace: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), nullable=False
+    )

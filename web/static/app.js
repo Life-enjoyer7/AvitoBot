@@ -179,12 +179,13 @@ function navigate(page, historyId = null) {
   const target = document.getElementById("page-" + page);
   if (target) target.classList.add("active");
   document.querySelectorAll("[data-page]").forEach(b => b.classList.toggle("active", b.dataset.page === page));
-  const names = { overview: "Обзор", tracks: "Мои отслеживания", history: "История цен", alerts: "Уведомления", settings: "Настройки", help: "Помощь" };
+  const names = { overview: "Обзор", tracks: "Мои отслеживания", history: "История цен", metrics: "Метрики", alerts: "Уведомления", settings: "Настройки", help: "Помощь" };
   document.getElementById("topPageTitle").textContent = names[page] || "Ценолов";
   if (page === "tracks") renderTable();
   if (page === "overview") renderGrid();
   if (page === "alerts") loadAlerts();
   if (page === "history") renderHistory(historyId);
+  if (page === "metrics") loadMetrics();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -527,6 +528,38 @@ function renderAlertsBadge(n) {
   if (!el) return;
   el.textContent = n;
   el.style.display = n > 0 ? "" : "none";
+}
+
+// ---------- Metrics (KPIs) ----------
+async function loadMetrics() {
+  const grid = document.getElementById("metricsGrid");
+  if (grid) grid.innerHTML = '<div class="empty" style="padding:30px 0">Загрузка метрик…</div>';
+  try {
+    const m = await api("/api/metrics");
+    renderMetrics(m);
+  } catch (e) {
+    const grid = document.getElementById("metricsGrid");
+    if (grid) grid.innerHTML = '<div class="empty" style="padding:30px 0">Не удалось загрузить метрики</div>';
+  }
+}
+
+function renderMetrics(m) {
+  const grid = document.getElementById("metricsGrid");
+  if (!grid) return;
+  const card = (note, value, title, sub) => `
+    <div class="stat">
+      <div class="stat-top"><span class="stat-note">${escapeHtml(note)}</span></div>
+      <div class="stat-value">${value}</div>
+      <div class="stat-label">${escapeHtml(title)}</div>
+      <div class="stat-foot">${escapeHtml(sub)}</div>
+    </div>`;
+  grid.innerHTML = [
+    card("KPI 1 · Активация", m.activation.rate + "%", "Activation Rate", `${m.activation.activated_users} из ${m.activation.started_users} добавили товар`),
+    card("KPI 2 · Глубина", m.avg_active_tracks.all, "Среднее активных треков", `3 дня: ${m.avg_active_tracks.cohort_3d} · 7 дней: ${m.avg_active_tracks.cohort_7d}`),
+    card("KPI 3 · Графики", m.feature_adoption.rate + "%", "Feature Adoption", `${m.feature_adoption.history_users} смотрели графики`),
+    card("KPI 4 · Клики", m.alert_ctr.rate + "%", "Alert CTR", `${m.alert_ctr.clicks} кликов из ${m.alert_ctr.delivered} алертов`),
+    card("KPI 5 · Надёжность", m.parser_success.rate + "%", "Parser Success Rate", `${m.parser_success.ok} успешных из ${m.parser_success.total} попыток`),
+  ].join("");
 }
 
 function openHistoryFor(id) {

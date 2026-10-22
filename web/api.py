@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 
 from config.settings import settings
 from db.database import async_session_factory, init_db
-from db.repositories import alert_repo, history_repo, track_repo, user_repo
+from db.repositories import alert_repo, history_repo, metric_repo, track_repo, user_repo
 from parser.parser_factory import ParserFactory
 from utils.url_validator import (
     UnsupportedMarketplaceError,
@@ -128,6 +128,14 @@ async def me(tg_id: int = Depends(current_telegram_id)) -> dict:
     }
 
 
+@app.get("/api/metrics")
+async def metrics(tg_id: int = Depends(current_telegram_id)) -> dict:
+    """Product metrics (5 KPIs) for the dashboard."""
+    async with async_session_factory() as session:
+        result = await metric_repo.compute_metrics(session)
+    return result
+
+
 @app.get("/api/tracks")
 async def tracks(tg_id: int = Depends(current_telegram_id)) -> list[dict]:
     async with async_session_factory() as session:
@@ -181,6 +189,12 @@ async def add_track(body: dict, tg_id: int = Depends(current_telegram_id)) -> di
         )
         if track.current_price is not None:
             await history_repo.add_history(session, track.id, track.current_price)
+        await metric_repo.record_event(
+            session,
+            "parse_ok" if not listing.estimated else "parse_fail",
+            user_id=user_id,
+            marketplace=marketplace.value,
+        )
         await session.commit()
 
     return {
@@ -222,6 +236,10 @@ async def history(track_id: int, days: int = 30, tg_id: int = Depends(current_te
         items = await history_repo.get_history_since(session, track_id, days=days)
         if not items:
             items = await history_repo.get_history(session, track_id, limit=30)
+        # Метрика вовлечённости: пользователь открыл график/историю.
+        await metric_repo.record_event(
+            session, "history_view", user_id=user_id, track_id=track_id, marketplace=track.marketplace.value
+        )
         await session.commit()
     return [
         {"price": item.price, "timestamp": item.timestamp.isoformat()}
